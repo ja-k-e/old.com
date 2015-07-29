@@ -1,14 +1,36 @@
-var site = new Site();
+var site = new Site({
+  images: {
+    count: 240,
+    lo_path: "images/bg/lo/",
+    hi_path: "images/bg/hi/",
+    prefix: "image-",
+    ext: ".jpg"
+  },
+  progress: {
+    loader: document.getElementById('loader'),
+    indicator: document.getElementById('indicator')
+  },
+  background: {
+    element: document.getElementById('background')
+  }
+});
+
+// initialize our site
 site.init();
 
-function Site() {
-  return {
+// site class
+function Site(params) {
+
+  var app = {
 
     mode: undefined,
 
     images: {
-      count: 240,
-      path: "images/bg/", lo_path: "lo/", hi_path: "hi/", prefix: "image-", ext: ".jpg",
+      count: params.images.count,
+      lo_path: params.images.lo_path,
+      hi_path: params.images.hi_path,
+      prefix: params.images.prefix,
+      ext: params.images.ext,
       loaded: {
         count: 0, val: false, partial: false
       },
@@ -16,15 +38,15 @@ function Site() {
     },
 
     progress: {
-      loader: document.getElementById('loader'),
-      indicator: document.getElementById('indicator'),
+      loader: params.progress.loader,
+      indicator: params.progress.indicator,
       scrolling: false,
-      currentLocation: 0,
+      currentFrame: 1,
       percent: 0
     },
 
     background: {
-      element: document.getElementById('background')
+      element: params.background.element
     },
 
     init: function () {
@@ -45,11 +67,9 @@ function Site() {
 
     preloadImages: function() {
 
-      var app = this;
-
       if (app.mode == "full") {
         for (var i = 1; i <= app.images.count; i++) {
-          var path = [app.images.path, app.images.lo_path, app.images.prefix, i, app.images.ext].join(""),
+          var path = [app.images.lo_path, app.images.prefix, i, app.images.ext].join(""),
               img = new Image();
           img.src = path;
           img.onload = imageLoad;
@@ -67,7 +87,8 @@ function Site() {
         app.loader();
         if (app.images.loaded.count == app.images.count) {
           app.imagesLoadedHandler();
-          console.log(app.images.loaded.count);
+          console.debug("Lo Res Images Loaded", app.images.loaded.count);
+          if (app.images.loaded.partial) console.warn("Not All Images Loaded Successfully");
         }
       }
     },
@@ -79,16 +100,12 @@ function Site() {
     },
 
 
-    imagesLoadedHandler: function () {
-      var app = this;
 
-      app.progress.currentLocation = 0;
-
-      var loadHiRes = debounce(function() {
+    loadHiRes: debounce(function() {
         app.progress.scrolling = false;
 
         console.debug("Mousewheel Complete");
-        var path = [app.images.path, app.images.hi_path, app.images.prefix, app.progress.currentLocation + 1, app.images.ext].join(""),
+        var path = [app.images.hi_path, app.images.prefix, app.progress.currentFrame, app.images.ext].join(""),
             img = new Image();
 
         img.src = path;
@@ -97,40 +114,101 @@ function Site() {
           app.setImage(img);
         }
 
-      }, 250);
+      }, 500),
 
-      window.addEventListener('mousewheel', function(e) {
 
-        e.preventDefault(); // No scroll
 
-        // set scrolling state
-        if (!app.progress.scrolling) app.progress.scrolling = true;
+    progressHandler: function(delta) {
+      // technique from:
+      // https://elikirk.com/canvas-based-scroll-controlled-backgroud-video-use-parallax-style-web-design/
 
-        // technique
-        // https://elikirk.com/canvas-based-scroll-controlled-backgroud-video-use-parallax-style-web-design/
-        // The following equation will return either a 1 for scroll down
-        // or -1 for a scroll up
-        var delta = Math.max(-1, Math.min(1, e.wheelDelta));
-        // This code mostly keeps us from going too far in either direction
-        if (delta == -1) app.progress.currentLocation += 1;
-        if (delta == 1) app.progress.currentLocation -= 1;
-        if (app.progress.currentLocation < 0) app.progress.currentLocation = 0;
-        if (app.progress.currentLocation >= app.images.data.length) app.progress.currentLocation = app.images.data.length - 1;
+      if (delta == -1) app.progress.currentFrame += 1;
+      if (delta == 1) app.progress.currentFrame -= 1;
+      if (app.progress.currentFrame <= 0) app.progress.currentFrame = 1;
+      if (app.progress.currentFrame > app.images.data.length) app.progress.currentFrame = app.images.data.length;
 
-        app.progress.percent = (app.progress.currentLocation / app.images.data.length);
-        app.progress.indicator.style.bottom = ((1 - app.progress.percent) * 90) + 5 + "%";
+      var ratio = (app.progress.currentFrame - 1) / (app.images.data.length - 1);
+      app.progress.percent = Math.round(ratio * 1000) / 1000;
+      app.progress.indicator.style.bottom = ((1 - app.progress.percent) * 90) + 5 + "%";
 
-        // See below for the details of this function
-        app.setImage(app.images.data[app.progress.currentLocation]);
+      console.debug("Current Frame:", app.progress.currentFrame);
+    },
 
-        // swap in hi res image
-        loadHiRes();
 
-      });
 
+    scrollHandler: function(e) {
+
+      e.preventDefault(); // No scroll
+
+      // set scrolling state
+      if (!app.progress.scrolling) app.progress.scrolling = true;
+
+
+      // set progress
+      var delta = Math.max(-1, Math.min(1, e.wheelDelta));
+      app.progressHandler(delta);
+
+      // scene control
+      app.sceneController();
+
+      // See below for the details of this function
+      app.setImage(app.images.data[app.progress.currentFrame - 1]);
+
+      // swap in hi res image when stopped
+      app.loadHiRes();
+
+    },
+
+
+    imagesLoadedHandler: function () {
+
+      app.progress.currentFrame = 0;
+
+      window.addEventListener('mousewheel', app.scrollHandler);
+
+    },
+
+
+    components: {
+      test: {
+        el: document.getElementById('test'),
+        in: {
+          frame: 60,
+          method: function () {
+
+          }
+        },
+        out: {
+          frame: 200,
+          method: function () {
+
+          }
+        },
+        const: function(frame) {
+
+        },
+        visible: false,
+
+      }
+    },
+
+    sceneController: function () {
+      var frame = app.progress.currentFrame;
+
+      if (frame >= app.components.test.in.frame && frame < app.components.test.out.frame && !app.components.test.visible) {
+        console.log(app.components.test.el.className);
+        app.components.test.el.className = "component visible";
+        app.components.test.visible = true;
+      } else if ((frame < app.components.test.in.frame || frame >= app.components.test.out.frame) && app.components.test.visible) {
+        app.components.test.el.className = "component";
+        app.components.test.visible = false;
+
+      }
     }
 
   };
+
+  return app;
 }
 
 

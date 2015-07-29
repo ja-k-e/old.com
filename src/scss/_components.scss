@@ -1,0 +1,26 @@
+.component {
+  position: absolute;
+  opacity: 0;
+  &.visible {
+    opacity: 1;
+  }
+}
+
+#test {
+  position: absolute;
+  right: 25%;
+  top: 50%;
+  margin-top: -100px;
+  height: 200px;
+  line-height: 200px;
+  width: 200px;
+  text-align: center;
+  background: rgba(white,0.2);
+  border-radius: 50%;
+  transition: opacity 200ms ease-in-out,
+    transform 400ms linear;
+  transform: translate(50%,50%);
+  &.visible {
+    transform: translate(0,0);
+  }
+}
