@@ -1,0 +1,9 @@
+$colors: (
+  trans-white: rgba(white,0.2),
+  trans-black: rgba(black,0.7)
+);
+
+
+@function color($which) {
+  @return map-get($colors, $which);
+}

@@ -1,0 +1,40 @@
+#loader {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.1);
+  opacity: 0;
+  transition: opacity 200ms linear,
+    transform 500ms ;
+  color: white;
+  animation: loader-in 500ms cubic-bezier(0, 0, 0.6, 1.6) forwards 500ms;
+
+  .message { z-index: 1; }
+
+  // sizes
+  $width: 100px; $depth: 100px; $height: 100px;
+
+  // prism element usage (width, depth, height)
+  .prism {
+    @include prism($width, $depth, $height, color(trans-white));
+  }
+
+
+  // behavior once page is loaded
+  &.loaded {
+    // keep rotating on the way out by rotating parent
+    .prism-cont {
+      transition: transform 500ms linear;
+      transform: translate(-50%,-50%) rotateX(-60deg) rotateY(-100deg);
+      transform-style: preserve-3d;
+    }
+    transform: translate(-50%, -50%) scale(1); opacity: 1;
+    animation: loader-out 500ms cubic-bezier(0,-0.5, 1, 1) forwards;
+  }
+}
+
+@keyframes loader-in {
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+@keyframes loader-out {
+  to { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
+}

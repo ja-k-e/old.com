@@ -3,8 +3,29 @@ body {
   background-image: url(../images/bg/hi/image-1.jpg);
   background-size: cover;
   background-position: center;
+  overflow: hidden;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    transition: opacity 500ms ease-out;
+    background-color: color(trans-black);
+  }
+  &.loaded {
+    &:before { opacity: 0; }
+  }
 }
+
 #background {
+
+  // needs fixing. color difference in images
+  filter: grayscale(100%);
+
+  // ghost
+  opacity: 0.7;
+
+  // equiv cover: center
   display: block;
   position: absolute;
   width: auto; height: auto;
