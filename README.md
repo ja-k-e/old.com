@@ -1,4 +1,4 @@
-#PBS Invention Project
+#jakealbaugh.com
 
 ##Getting Started
 1. Install dependencies: `npm install`
