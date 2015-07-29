@@ -1,9 +1,5 @@
 .component {
   position: absolute;
-  opacity: 0;
-  &.visible {
-    opacity: 1;
-  }
 }
 
 #test {
@@ -17,10 +13,12 @@
   text-align: center;
   background: rgba(white,0.2);
   border-radius: 50%;
+  opacity: 0;
   transition: opacity 200ms ease-in-out,
     transform 400ms linear;
   transform: translate(50%,50%);
-  &.visible {
+  &.active {
+    opacity: 1;
     transform: translate(0,0);
   }
 }

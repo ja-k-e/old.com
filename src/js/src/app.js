@@ -7,12 +7,36 @@ var site = new Site({
     ext: ".jpg"
   },
   progress: {
-    loader: document.getElementById('loader'),
-    indicator: document.getElementById('indicator')
+    loader: document.getElementById("loader"),
+    loaderPrism: document.querySelector("#loader .prism"),
+    loaderMessage: document.querySelector("#loader .message"),
+    indicator: document.getElementById("indicator"),
+    completeClassName: "loaded"
   },
   background: {
-    element: document.getElementById('background')
-  }
+    element: document.getElementById("background")
+  },
+  components: [
+    {
+      el: document.getElementById("test"),
+      visible: false,
+      activeClass: "active",
+      in_frame: 60,
+      out_frame: 200,
+      in_method: function() {
+        this.el.className += " " + this.activeClass;
+        this.visible = true;
+      },
+      out_method: function() {
+        this.el.className = this.el.className.replace(this.activeClass, "");
+        this.visible = false;
+      },
+      const: function(frame) {
+
+      }
+
+    }
+  ]
 });
 
 // initialize our site
@@ -39,6 +63,9 @@ function Site(params) {
 
     progress: {
       loader: params.progress.loader,
+      loaderPrism: params.progress.loaderPrism,
+      loaderMessage: params.progress.loaderMessage,
+      completeClassName: params.progress.completeClassName,
       indicator: params.progress.indicator,
       scrolling: false,
       currentFrame: 1,
@@ -49,7 +76,7 @@ function Site(params) {
       element: params.background.element
     },
 
-    init: function () {
+    init: function() {
       this.mode = this.detectMode();
       this.preloadImages();
     },
@@ -62,7 +89,10 @@ function Site(params) {
     loader: function() {
       var app = this,
           decimal = Math.round(app.images.loaded.count / app.images.count * 100);
-      app.progress.loader.innerHTML = decimal + "%";
+      var transformDeg = -360 * (decimal / 100) + 45;
+      app.progress.loaderPrism.style.webkitTransform = "rotateY(" + transformDeg + "deg) rotateX("+ transformDeg + "deg)";
+      app.progress.loaderPrism.style.transform = "rotateY(" + transformDeg + "deg) rotateX("+ transformDeg + "deg)";
+      app.progress.loaderMessage.innerHTML = decimal + "%";
     },
 
     preloadImages: function() {
@@ -87,14 +117,17 @@ function Site(params) {
         app.loader();
         if (app.images.loaded.count == app.images.count) {
           app.imagesLoadedHandler();
+          app.progress.loader.className += app.progress.completeClassName;
+          document.body.className += "loaded";
           console.debug("Lo Res Images Loaded", app.images.loaded.count);
           if (app.images.loaded.partial) console.warn("Not All Images Loaded Successfully");
         }
       }
     },
 
+
     setImage: function(img) {
-      var context = this.background.element.getContext('2d');
+      var context = this.background.element.getContext("2d");
       // image, x, y, width, height
       context.drawImage(img, 0, 0, 1280, 720);
     },
@@ -105,7 +138,7 @@ function Site(params) {
         app.progress.scrolling = false;
 
         console.debug("Mousewheel Complete");
-        var path = [app.images.hi_path, app.images.prefix, app.progress.currentFrame, app.images.ext].join(""),
+        var path = [app.images.hi_path, app.images.prefix, Math.round(app.progress.currentFrame), app.images.ext].join(""),
             img = new Image();
 
         img.src = path;
@@ -122,16 +155,19 @@ function Site(params) {
       // technique from:
       // https://elikirk.com/canvas-based-scroll-controlled-backgroud-video-use-parallax-style-web-design/
 
-      if (delta == -1) app.progress.currentFrame += 1;
-      if (delta == 1) app.progress.currentFrame -= 1;
-      if (app.progress.currentFrame <= 0) app.progress.currentFrame = 1;
+      // animation rate
+      var inc = 0.5;
+
+      if (delta <= -1) app.progress.currentFrame -= inc;
+      if (delta >= 1) app.progress.currentFrame += inc;
+      if (app.progress.currentFrame < 1) app.progress.currentFrame = 1;
       if (app.progress.currentFrame > app.images.data.length) app.progress.currentFrame = app.images.data.length;
 
       var ratio = (app.progress.currentFrame - 1) / (app.images.data.length - 1);
       app.progress.percent = Math.round(ratio * 1000) / 1000;
       app.progress.indicator.style.bottom = ((1 - app.progress.percent) * 90) + 5 + "%";
 
-      console.debug("Current Frame:", app.progress.currentFrame);
+      // console.debug("Current Frame:", app.progress.currentFrame);
     },
 
 
@@ -145,14 +181,15 @@ function Site(params) {
 
 
       // set progress
-      var delta = Math.max(-1, Math.min(1, e.wheelDelta));
+      // var delta = Math.max(-1, Math.min(1, e.wheelDelta));
+      var delta = e.deltaY;
       app.progressHandler(delta);
 
       // scene control
       app.sceneController();
 
       // See below for the details of this function
-      app.setImage(app.images.data[app.progress.currentFrame - 1]);
+      app.setImage(app.images.data[Math.round(app.progress.currentFrame) - 1]);
 
       // swap in hi res image when stopped
       app.loadHiRes();
@@ -160,49 +197,27 @@ function Site(params) {
     },
 
 
-    imagesLoadedHandler: function () {
+    imagesLoadedHandler: function() {
 
       app.progress.currentFrame = 0;
 
-      window.addEventListener('mousewheel', app.scrollHandler);
+      window.addEventListener("wheel", app.scrollHandler);
 
     },
 
 
-    components: {
-      test: {
-        el: document.getElementById('test'),
-        in: {
-          frame: 60,
-          method: function () {
+    components: params.components,
 
-          }
-        },
-        out: {
-          frame: 200,
-          method: function () {
-
-          }
-        },
-        const: function(frame) {
-
-        },
-        visible: false,
-
-      }
-    },
-
-    sceneController: function () {
+    sceneController: function() {
       var frame = app.progress.currentFrame;
 
-      if (frame >= app.components.test.in.frame && frame < app.components.test.out.frame && !app.components.test.visible) {
-        console.log(app.components.test.el.className);
-        app.components.test.el.className = "component visible";
-        app.components.test.visible = true;
-      } else if ((frame < app.components.test.in.frame || frame >= app.components.test.out.frame) && app.components.test.visible) {
-        app.components.test.el.className = "component";
-        app.components.test.visible = false;
-
+      for(var i = 0; i < app.components.length; i++) {
+        var component = app.components[i];
+        if (frame >= component.in_frame && frame < component.out_frame && !component.visible) {
+          component.in_method();
+        } else if ((frame < component.in_frame || frame >= component.out_frame) && component.visible) {
+          component.out_method();
+        }
       }
     }
 
@@ -236,7 +251,7 @@ function Site(params) {
     // All the taxing stuff you do
   }, 250);
 
-  window.addEventListener('resize', myEfficientFn);
+  window.addEventListener("resize", myEfficientFn);
  */
 
 function debounce(func, wait, immediate) {
