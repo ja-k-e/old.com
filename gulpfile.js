@@ -75,10 +75,8 @@ gulp.task('js', function() {
 
   // ordered javascript
   var jsFiles = [
-    'src/js/src/setup.js',
-    'src/js/src/services/*.js',
-    'src/js/src/directives/*.js',
-    'src/js/src/controllers/*.js'
+    'src/js/src/*.js',
+    'src/js/src/**/*.js'
   ]
 
   gulp.src(jsFiles)
@@ -109,7 +107,7 @@ gulp.task('js', function() {
 
 // images
 gulp.task('images', function () {
-  return gulp.src('src/images/*')
+  return gulp.src(['src/images/*','src/images/**/*'])
     .pipe(plugins.imagemin({
       progressive: true,
       svgoPlugins: [{removeViewBox: false}],
@@ -158,7 +156,7 @@ gulp.task('watch', function () {
   gulp.watch(['src/html/*.html'], ['html']);
   gulp.watch(['src/scss/*.scss', 'src/scss/**/*.scss'], ['scss']);
   gulp.watch(['src/js/*.js', 'src/js/src/*.js', 'src/js/src/**/*.js'], ['js']);
-  gulp.watch(['src/images/*'], ['images']);
+  gulp.watch(['src/images/*','src/images/**/*'], ['images']);
 });
 
 
