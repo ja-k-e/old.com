@@ -1,3 +1,9 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   color: white;
   background: black;
@@ -5,11 +11,16 @@ body {
   font-weight: 300;
 }
 
-strong {
-  font-weight: 700;
+em {
+  color: color(semi-trans-primary);
 }
 
 a {
-  color: color(primary);
+  color: color(semi-trans-primary);
   text-decoration: none;
+  transition: color 200ms ease-in;
+  &:hover {
+    color: color(primary);
+  }
+
 }

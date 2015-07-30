@@ -5,6 +5,7 @@ function Site(params) {
 
     mode: undefined,
     looping: undefined,
+    goingToFrame: false,
 
     images: {
       count: params.images.count,
@@ -79,6 +80,7 @@ function Site(params) {
     goToFrame: function(which) {
       var distance = which - app.progress.currentFrame,
           move;
+      app.goingToFrame = true;
       if (distance > 0) {
         console.log("> 0",distance);
         move = function() {
@@ -89,6 +91,8 @@ function Site(params) {
               app.progress.currentFrame++;
               move();
             } else {
+              app.goingToFrame = false;
+              app.sceneController();
               clearTimeout(move);
             }
           }, 30);
@@ -102,6 +106,8 @@ function Site(params) {
               app.progress.currentFrame--;
               move();
             } else {
+              app.goingToFrame = false;
+              app.sceneController();
               clearTimeout(move);
             }
           }, 30);
@@ -283,8 +289,10 @@ function Site(params) {
       for(var i = 0; i < app.sections.length; i++) {
         var section = app.sections[i];
         if (frame >= section.in_frame && frame < section.out_frame && !section.visible) {
-          section.el.className += " active";
-          section.visible = true;
+          if(!app.goingToFrame) {
+            section.el.className += " active";
+            section.visible = true;
+          }
         } else if ((frame < section.in_frame || frame >= section.out_frame) && section.visible) {
           section.el.className = section.el.className.replace(" active", "");
           section.visible = false;

@@ -3,7 +3,7 @@ section {
   opacity: 0;
   .loaded & { opacity: 1; }
   top: 10vh; left: 50%; right: 10%;
-  color: rgba(white,0.8);
+  color: color(semi-trans-white);
   &.active {
     z-index: 1;
     > div {
@@ -15,7 +15,7 @@ section {
     display: block;
     opacity: 0;
     animation: break-out 200ms ease-in forwards;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     line-height: 1.8;
   }
 }
