@@ -13,8 +13,13 @@ body {
     background-color: color(trans-black);
   }
   &.loaded {
-    &:before { opacity: 0; }
+    &:before { animation: bg-flicker 100ms linear infinite; }
   }
+}
+
+@keyframes bg-flicker {
+  from { opacity: 0; }
+  to   { opacity: 0.1; }
 }
 
 #background {

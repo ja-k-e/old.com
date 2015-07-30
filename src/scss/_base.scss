@@ -1,3 +1,15 @@
 body {
+  color: white;
   background: black;
+  font-family: Merriweather, Georgia, serif;
+  font-weight: 300;
+}
+
+strong {
+  font-weight: 700;
+}
+
+a {
+  color: color(primary);
+  text-decoration: none;
 }

@@ -1,6 +1,35 @@
-#indicator {
+#indicator-container {
   position: absolute;
   top: 5%;
   right: 5vh;
-  border-left: 4px solid rgba(white,0.4);
+  width: 0.5rem;
+  bottom: 5%;
+  opacity: 0;
+  transition: opacity 200ms linear;
+  .loaded & { opacity: 1; }
+  border: 1px solid color(trans-white);
+
+  #indicator {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    right: 0; left: 0;
+    background-color: color(trans-primary);
+  }
+
+  > span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    cursor: pointer;
+    border-top: 1px solid color(semi-trans-white);
+    transition: background 200ms ease-in;
+    z-index: 2;
+    &:hover {
+      background-color: color(primary);
+    }
+    &:last-child {
+      border-bottom: 1px solid color(semi-trans-white);
+    }
+  }
 }
