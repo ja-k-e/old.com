@@ -1,18 +1,36 @@
-body {
-  min-height: 100vh;
-  background-image: url(../images/bg/hi/image-1.jpg);
-  background-size: cover;
-  background-position: center;
+.full .app-wrapper {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100%; width: 100%;
+  &:after {
+    background-image: url(../images/bg/hi/image-1.jpg);
+  }
+}
+.app-wrapper {
+  min-height: 100%;
+  overflow: hidden;
+  &:before,
+  &:after {
+    content: "";
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+  }
+  &:after {
+    z-index: 0;
+    background-image: url(../images/bg/hi/image-106.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+  }
 
   &:before {
-    content: "";
-    position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: 1;
     transition: opacity 500ms ease-out;
     background-color: color(trans-black);
   }
-  &.loaded {
-    &:before { animation: bg-flicker 100ms linear infinite; }
+  .loaded &:before,
+  .scroll &:before {
+    animation: bg-flicker 100ms linear infinite;
   }
 }
 
@@ -21,6 +39,8 @@ body {
   to   { opacity: 0.1; }
 }
 
+
+.scroll #background { display: none; }
 #background {
 
   // needs fixing. color difference in images
@@ -29,11 +49,13 @@ body {
   // ghost
   opacity: 0.7;
 
-  // equiv cover: center
+  z-index: 2;
+
+  // equiv cover & center
   display: block;
   position: absolute;
   width: auto; height: auto;
-  min-width: 100%; min-height: 100vh;
+  min-width: 100%; min-height: 100%;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
 }

@@ -1,0 +1,57 @@
+#prism-menu {
+  z-index: 9;
+  position: absolute;
+  bottom: 5rem; left: 5rem;
+  opacity: 0;
+  transition: opacity 200ms linear;
+  color: white;
+  cursor: pointer;
+
+  .prism-menu-list {
+    opacity: 0;
+    color: color(semi-trans-white);
+    visibility: hidden;
+    transition: opacity 200ms ease-in,
+      visibility 200ms ease-in,
+      left 200ms ease-in,;
+    position: absolute;
+    left: 20px;
+    width: 300px;
+    transform: translateY(-50%);
+    a {
+      padding-right: 1rem;
+      & ~ a { padding-left: 1rem; }
+    }
+  }
+
+  &.open .prism-menu-list {
+    opacity: 1;
+    left: 60px;
+    visibility: visible;
+  }
+
+  // sizes
+  $width: 50px; $depth: 50px; $height: 50px;
+
+  .prism { opacity: 0.3; }
+  .prism:hover { opacity: 1; }
+  &.open {
+    .prism { opacity: 1; }
+  }
+  &.open {
+    .prism:hover { opacity: 0.3; }
+  }
+
+  // prism element usage (width, depth, height)
+  .prism {
+    @include prism($width, $depth, $height, color(trans-white));
+    transform: rotateX(45deg) rotateY(45deg);
+    transition: opacity 200ms ease-in-out;
+  }
+
+
+  // behavior once page is loaded
+  .loaded & {
+    opacity: 1;
+  }
+}

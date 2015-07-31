@@ -1,28 +1,73 @@
-section {
+.full section {
   position: absolute;
-  opacity: 0;
-  .loaded & { opacity: 1; }
   top: 10vh; left: 50%; right: 10%;
-  color: color(semi-trans-white);
   &.active {
-    z-index: 1;
+    z-index: 10;
     > div {
       animation: break-in 200ms ease-in 200ms forwards;
     }
   }
+  > div {
+    opacity: 0;
+    animation: break-out 200ms ease-in forwards;
+  }
+}
+
+.scroll section {
+  margin: 0 auto;
+  padding: 2rem 0 2rem 2rem;
+  font-size: 0.8rem;
+  box-sizing: border-box;
+  width: 95%;
+  z-index: 3;
+  position: relative;
+  &:first-child { margin-top: 6rem; }
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 85%;
+    border-bottom: 1px solid color(trans-white);
+  }
+}
+
+@media (min-width: 380px) {
+  .scroll section {
+    font-size: 1rem;
+  }
+}
+@media (min-width: 600px) {
+  .scroll section {
+    width: 45%;
+    margin-left: auto;
+    margin-right: 5%;
+    font-size: 1rem;
+  }
+}
+
+section {
+  opacity: 0;
+  z-index: 9;
+
+  .loaded &,
+  .scroll & {
+    opacity: 1;
+  }
+
+
+  color: color(semi-trans-white);
+  text-shadow: 1px 1px 2px rgba(black,0.1);
+  font-size: 1.2rem;
 
   > div {
     display: block;
-    opacity: 0;
-    animation: break-out 200ms ease-in forwards;
-    font-size: 1.2rem;
     line-height: 1.8;
   }
 }
 
 @for $i from 1 through 10 {
   section > div:nth-child(#{$i}) { padding-left: ($i - 1) * 0.5em; }
-  section.active > div:nth-child(#{$i}) { animation-delay: 500ms * ($i - 1); }
+  .full section.active > div:nth-child(#{$i}) { animation-delay: 500ms * ($i - 1); }
 }
 
 section > div.hard {

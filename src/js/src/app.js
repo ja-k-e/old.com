@@ -1,5 +1,5 @@
 var settings = {
-  images: {
+  frames: {
     count: 240,
     lo_path: "images/bg/lo/",
     hi_path: "images/bg/hi/",
@@ -12,6 +12,8 @@ var settings = {
     loaderMessage: document.querySelector("#loader .message"),
     indicator: document.getElementById("indicator"),
     indicatorContainer: document.getElementById("indicator-container"),
+    prismMenu: document.getElementById("prism-menu"),
+    spinnerPrism: document.getElementById("progress-spinner-prism"),
     completeClassName: "loaded"
   },
   background: {
@@ -23,7 +25,7 @@ var settings = {
 var start = 52,
     stop = 210,
     pad = 10,
-    sections = 7;
+    sections = 6;
 var each = Math.floor((stop - start) / sections);
 
 for (var i = 0; i < sections; i++) {

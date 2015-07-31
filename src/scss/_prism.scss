@@ -8,7 +8,7 @@
   perspective: 3000px;
 }
 
-@mixin prism($width, $depth, $height, $color) {
+@mixin prism($width, $depth, $height, $color, $anim-in:false) {
   $spacer: 0.25px; // extra spacing on z-axis
 
   transform-style: preserve-3d;
@@ -25,8 +25,10 @@
     height: $height;
     transform-style: preserve-3d;
     transform-origin: 50% 50%;
-    animation: flicker 100ms linear infinite,
-      jiggle 100ms linear infinite;
+    @if ($anim-in == true) {
+      animation: flicker 100ms linear infinite,
+        jiggle 100ms linear infinite;
+    }
   }
 
   // axis is the center point for sides (width, depth, height)

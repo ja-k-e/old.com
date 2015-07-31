@@ -1,8 +1,10 @@
+.scroll #loader { display: none; }
 #loader {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%) scale(0.1);
   opacity: 0;
+  z-index: 9;
   transition: opacity 200ms linear,
     transform 500ms ;
   color: white;
@@ -15,7 +17,7 @@
 
   // prism element usage (width, depth, height)
   .prism {
-    @include prism($width, $depth, $height, color(trans-white));
+    @include prism($width, $depth, $height, color(trans-white), true);
   }
 
 
