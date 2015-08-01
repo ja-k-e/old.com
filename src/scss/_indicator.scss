@@ -1,8 +1,9 @@
+$indicator-w: 0.9rem;
 #indicator-container {
   position: absolute;
   top: 5%;
   right: 5vh;
-  width: 0.8rem;
+  width: $indicator-w;
   bottom: 5%;
   opacity: 0;
   transition: opacity 200ms linear;
@@ -25,38 +26,28 @@
 
   @mixin indicator-dash() {
     content: "";
-    width: 0.8rem; height: 0.8rem;
+    width: $indicator-w; height: $indicator-w;
     border: 1px solid color(semi-trans-white);
+    background: 1px solid color(trans-white);
     box-sizing: border-box;
     position: absolute;
-    left: 0;
     border-radius: 50%;
+    cursor: pointer;
     @content;
   }
 
   > span {
     position: absolute;
-    left: 0;
-    width: 100%;
-    cursor: pointer;
-    // border-bottom: 0.8rem solid color(semi-trans-white);
+    border-radius: 50%;
+    background: red;
+    box-sizing: border-box;
+    z-index: 2;
     &::after {
       @include indicator-dash() { bottom: 0; }
+      transition: background 200ms ease-in;
     }
-    // transform: translateY(-6px);
-    box-sizing: border-box;
-    transition: background 200ms ease-in;
-    z-index: 2;
-    &:hover {
-      &:after { background: color(semi-trans-white); }
-      // background-color: color(semi-trans-primary);
-    }
-    &:nth-child(2) {
-      // border-top: 0.8rem solid color(semi-trans-white);
-      &::before {
-        @include indicator-dash() { top: 0; }
-        background: color(semi-trans-white);
-      }
+    &:hover, &.active {
+      &:after { background: white; }
     }
   }
 }
