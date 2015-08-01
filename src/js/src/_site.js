@@ -13,46 +13,6 @@ function Site(params) {
     },
 
 
-    // jump to a specific frame
-    goToFrame: function(which) {
-      var distance = which - app.progress.currentFrame,
-          move;
-      if (!app.goingToFrame) {
-        app.goingToFrame = true;
-        if (distance > 0) {
-          move = function() {
-            setTimeout(function() {
-              if(app.progress.currentFrame < which) {
-                app.progressHandler(1);
-                app.progress.currentFrame++;
-                move();
-              } else {
-                app.goingToFrame = false;
-                app.sceneController();
-                clearTimeout(move);
-              }
-            }, 30);
-          }
-        } else {
-          move = function() {
-            setTimeout(function() {
-              if(app.progress.currentFrame > which) {
-                app.progressHandler(-1);
-                app.progress.currentFrame--;
-                move();
-              } else {
-                app.goingToFrame = false;
-                app.sceneController();
-                clearTimeout(move);
-              }
-            }, 30);
-          }
-        }
-        move();
-      }
-    },
-
-
     // loads a high resolution image when wheel movement stops
     imageLoadHiRes: debounce(function() {
       app.progress.scrolling = false;
@@ -70,7 +30,7 @@ function Site(params) {
     }, 500),
 
 
-    // loops through images when wheel movement stops
+    // loops through images once wheel movement stops and hi res is loaded
     imageLooper: function() {
       var i = 0, inc = 1,//0.25,
           distance = 4, direction = 1,
@@ -113,13 +73,6 @@ function Site(params) {
     },
 
 
-    // once all lo resolution images are loaded
-    imagesLoadedHandler: function() {
-      app.progress.currentFrame = 1;
-      window.addEventListener("wheel", app.scrollHandler);
-    },
-
-
     // preload lo res images for animation
     imagePreloader: function() {
 
@@ -140,7 +93,7 @@ function Site(params) {
 
       function imageLoad() {
         app.frames.loaded.count++;
-        app.progressLoaderAnimate();
+        app.imagePreloaderAnimate();
         if (app.frames.loaded.count == app.frames.count) {
           app.imagesLoadedHandler();
           addClass(app.progress.loader, app.progress.completeClassName);
@@ -152,12 +105,30 @@ function Site(params) {
     },
 
 
+    // image load progress indicator
+    imagePreloaderAnimate: function() {
+      var decimal = Math.round(app.frames.loaded.count / app.frames.count * 100);
+      var transformDeg = -360 * (decimal / 100) + 45;
+      app.progress.loaderPrism.style.webkitTransform = "rotateY(" + transformDeg + "deg) rotateX("+ transformDeg + "deg)";
+      app.progress.loaderPrism.style.transform = "rotateY(" + transformDeg + "deg) rotateX("+ transformDeg + "deg)";
+      app.progress.loaderMessage.innerHTML = decimal + "%";
+    },
+
+
     // sets an image to the canvas
     imageSetter: function(img) {
       var context = app.background.element.getContext("2d");
       // image, x, y, width, height
       context.drawImage(img, 0, 0, 1280, 720);
     },
+
+
+    // once all lo resolution images are loaded
+    imagesLoadedHandler: function() {
+      app.progress.currentFrame = 1;
+      window.addEventListener("wheel", app.scrollHandler);
+    },
+
 
 
     // detect full animation or static mode
@@ -168,6 +139,46 @@ function Site(params) {
         return "scroll";
       } else {
         return "full";
+      }
+    },
+
+
+    // jump to a specific frame
+    navigationGoToFrame: function(which) {
+      var distance = which - app.progress.currentFrame,
+          move;
+      if (!app.goingToFrame) {
+        app.goingToFrame = true;
+        if (distance > 0) {
+          move = function() {
+            setTimeout(function() {
+              if(app.progress.currentFrame < which) {
+                app.progressHandler(1);
+                app.progress.currentFrame++;
+                move();
+              } else {
+                app.goingToFrame = false;
+                app.sceneController();
+                clearTimeout(move);
+              }
+            }, 30);
+          }
+        } else {
+          move = function() {
+            setTimeout(function() {
+              if(app.progress.currentFrame > which) {
+                app.progressHandler(-1);
+                app.progress.currentFrame--;
+                move();
+              } else {
+                app.goingToFrame = false;
+                app.sceneController();
+                clearTimeout(move);
+              }
+            }, 30);
+          }
+        }
+        move();
       }
     },
 
@@ -192,7 +203,7 @@ function Site(params) {
         navItem.id = "nav-item-" + to_frame;
         navItem.setAttribute("data-frame",to_frame);
         navItem.addEventListener("click", function() {
-          app.goToFrame(to_frame);
+          app.navigationGoToFrame(to_frame);
         }, false);
         navItem.style.top = Math.round(to_frame / app.frames.count * 10000) / 100 + "%";
         app.progress.navItems.push(navItem);
@@ -266,17 +277,6 @@ function Site(params) {
     },
 
 
-    // progress loader
-    progressLoaderAnimate: function() {
-      var app = this,
-          decimal = Math.round(app.frames.loaded.count / app.frames.count * 100);
-      var transformDeg = -360 * (decimal / 100) + 45;
-      app.progress.loaderPrism.style.webkitTransform = "rotateY(" + transformDeg + "deg) rotateX("+ transformDeg + "deg)";
-      app.progress.loaderPrism.style.transform = "rotateY(" + transformDeg + "deg) rotateX("+ transformDeg + "deg)";
-      app.progress.loaderMessage.innerHTML = decimal + "%";
-    },
-
-
     // handle scene activity on progress
     sceneController: function() {
       var frame = app.progress.currentFrame;
@@ -286,7 +286,8 @@ function Site(params) {
             itemFrame = parseInt(item.getAttribute("data-frame"));
         if (app.progress.direction == "down" && frame >= itemFrame) {
           if (!hasClass(item, "active")) addClass(item,"active");
-        } else if (app.progress.direction == "up" && frame < itemFrame) {
+        } else if (app.progress.direction == "up" && Math.floor(frame) < itemFrame - 1) {
+          console.log(frame, itemFrame)
           removeClass(item, "active");
         }
       }
@@ -332,7 +333,7 @@ function Site(params) {
     },
 
     frames: {
-      inc: (/firefox/.test(navigator.userAgent.toLowerCase())) ? 1 : 0.5,
+      inc: (/firefox/.test(navigator.userAgent.toLowerCase())) ? 1 : 0.25,
       count: params.frames.count,
       lo_path: params.frames.lo_path,
       hi_path: params.frames.hi_path,

@@ -21,7 +21,7 @@ $indicator-w: 0.9rem;
     top: 0;
     width: 2px;
     right: calc(50% - 1px); left: calc(50% - 1px);
-    background-color: color(semi-trans-primary);
+    background-color: color(trans-white);
   }
 
   @mixin indicator-dash() {
