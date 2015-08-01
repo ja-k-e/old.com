@@ -8,7 +8,7 @@ $indicator-w: 0.9rem;
   opacity: 0;
   transition: opacity 200ms linear;
   box-sizing: border-box;
-  .loaded & { opacity: 0.25; &:hover { opacity: 1; } }
+  .loaded & { opacity: 0.5; &:hover { opacity: 1; } }
   // border-top: 2px solid color(semi-trans-white);
   // border-bottom: 2px solid color(semi-trans-white);
   z-index: 3;
@@ -44,7 +44,7 @@ $indicator-w: 0.9rem;
     z-index: 2;
     &::after {
       @include indicator-dash() { bottom: 0; }
-      transition: background 200ms ease-in;
+      transition: background 100ms linear;
     }
     &:hover, &.active {
       &:after { background: white; }
