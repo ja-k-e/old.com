@@ -24,5 +24,15 @@ a {
   &:hover {
     color: color(primary);
   }
+}
 
+.sans {
+  font-size: 0.9em;
+  letter-spacing: 0.125em;
+  font-family: "Raleway", sans-serif;
+  text-transform: uppercase;
+}
+
+.lower {
+  text-transform: lowercase;
 }

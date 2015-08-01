@@ -191,7 +191,7 @@ function Site(params) {
       for (var i = 0; i < app.sections.length; i++) {
         (function() {
           var comp = app.sections[i];
-          navItem(comp.in_frame + (comp.out_frame - comp.in_frame) / 2);
+          navItem(comp.in_frame + 1);
         }())
       }
       // last span
@@ -265,7 +265,7 @@ function Site(params) {
 
       // maybe a random image
       var dice = Math.random(),
-          frame = (dice < 0.01) ? (Math.random() * app.frames.count) : app.progress.currentFrame;
+          frame = (dice < 0.005) ? (Math.random() * app.frames.count) : app.progress.currentFrame;
 
       // set the image
       app.imageSetter(app.frames.data[Math.ceil(frame) - 1]);
@@ -287,7 +287,6 @@ function Site(params) {
         if (app.progress.direction == "down" && frame >= itemFrame) {
           if (!hasClass(item, "active")) addClass(item,"active");
         } else if (app.progress.direction == "up" && Math.floor(frame) < itemFrame - 1) {
-          console.log(frame, itemFrame)
           removeClass(item, "active");
         }
       }

@@ -37,7 +37,6 @@ for (var i = 0; i < sections; i++) {
   });
 }
 
-console.log(settings);
 // initialize our site
 var site = new Site(settings);
 site.init();

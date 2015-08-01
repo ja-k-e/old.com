@@ -13,36 +13,39 @@
   }
 }
 
-.scroll section {
+.scroll main {
   margin: 0 auto;
-  padding: 2rem 0 2rem 2rem;
+  section {
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+  }
+  padding-bottom: 4rem;
   font-size: 0.8rem;
+}
+
+.scroll section {
+  width: 100%;
+  padding: 2rem 0 2rem 2rem;
   box-sizing: border-box;
-  width: 95%;
   z-index: 3;
   position: relative;
-  &:first-child { margin-top: 6rem; }
-  &:after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0; right: 85%;
-    border-bottom: 1px solid color(trans-white);
-  }
+  // background: color(trans-black);
 }
 
 @media (min-width: 380px) {
-  .scroll section {
+  .scroll main {
     font-size: 1rem;
   }
 }
 @media (min-width: 600px) {
-  .scroll section {
-    width: 45%;
-    margin-left: auto;
-    margin-right: 5%;
-    font-size: 1rem;
+  .scroll main section {
+    padding-left: 50%;
+    padding-right: 0%;
   }
+}
+
+main {
+  font-size: 1.2rem;
 }
 
 section {
@@ -54,10 +57,8 @@ section {
     opacity: 1;
   }
 
-
   color: color(semi-trans-white);
   text-shadow: 1px 1px 2px rgba(black,0.1);
-  font-size: 1.2rem;
 
   > div {
     display: block;
@@ -99,5 +100,5 @@ section > div.center {
 
 
 @media (min-width: 1200px) {
-  section > div { font-size: 1.6rem; }
+  section > div { font-size: 1.4rem; }
 }

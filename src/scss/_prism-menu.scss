@@ -1,57 +1,111 @@
-#prism-menu {
-  z-index: 9;
+.scroll header {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .scroll header #prism-menu {
+    // margin: 0 0 2rem 5%;
+    font-size: 1rem;
+  }
+}
+
+.full #prism-menu {
   position: absolute;
   bottom: 5rem; left: 5rem;
   opacity: 0;
-  transition: opacity 200ms linear;
+  &.open .prism-menu-list {
+    left: 60px;
+  }
+  .prism-menu-list {
+    width: 300px;
+    transform: translateY(-50%);
+    a {
+      padding-right: 0.5rem;
+      & ~ a { padding-left: 0.5rem; }
+    }
+  }
+  .prism {
+    // sizes
+    $width: 50px; $depth: 50px; $height: 50px;
+    @include prism($width, $depth, $height, color(trans-white));
+  }
+}
+
+.scroll #prism-menu {
+  position: relative;
+  height: 3.2rem;
+  opacity: 1;
+  width: 100%;
+  background: transparent;
+  &.open { background: black; }
+
+
+  &.open .prism-menu-list {
+    left: 46px;
+  }
+
+  .prism-menu-list {
+    top: 17px;
+    a {
+      padding-right: 0.2rem;
+      & ~ a { padding-left: 0.2rem; }
+    }
+  }
+
+  .prism-cont {
+    transform: none;
+    left: 10px; top: 1rem;
+  }
+  .prism {
+    // sizes
+    $width: 20px; $depth: 20px; $height: 20px;
+    @include prism($width, $depth, $height, color(trans-white));
+    position: relative;
+  }
+}
+
+
+#prism-menu {
+  z-index: 9;
+  transition: opacity 200ms linear,
+    background 200ms ease-in-out;
   color: white;
   cursor: pointer;
 
   .prism-menu-list {
+    position: absolute;
+    left: 20px;
     opacity: 0;
     color: color(semi-trans-white);
     visibility: hidden;
     transition: opacity 200ms ease-in,
       visibility 200ms ease-in,
       left 200ms ease-in,;
-    position: absolute;
-    left: 20px;
-    width: 300px;
-    transform: translateY(-50%);
-    a {
-      padding-right: 1rem;
-      & ~ a { padding-left: 1rem; }
-    }
   }
 
   &.open .prism-menu-list {
     opacity: 1;
-    left: 60px;
     visibility: visible;
-  }
-
-  // sizes
-  $width: 50px; $depth: 50px; $height: 50px;
-
-  .prism { opacity: 0.3; }
-  .prism:hover { opacity: 1; }
-  &.open {
-    .prism { opacity: 1; }
-  }
-  &.open {
-    .prism:hover { opacity: 0.3; }
   }
 
   // prism element usage (width, depth, height)
   .prism {
-    @include prism($width, $depth, $height, color(trans-white));
     transform: rotateX(45deg) rotateY(45deg);
     transition: opacity 200ms ease-in-out;
   }
 
 
-  // behavior once page is loaded
+  // behavior once page is loaded, or scroll mode
   .loaded & {
     opacity: 1;
+
+    .prism { opacity: 0.3; }
+    .prism:hover { opacity: 1; }
+    &.open {
+      .prism { opacity: 1; }
+    }
+    &.open {
+      .prism:hover { opacity: 0.3; }
+    }
   }
 }

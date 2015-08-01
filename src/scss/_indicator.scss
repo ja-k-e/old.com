@@ -25,8 +25,8 @@ $indicator-w: 0.9rem;
   }
 
   @mixin indicator-dash() {
-    content: "";
     width: $indicator-w; height: $indicator-w;
+    margin-top: $indicator-w / -2;
     border: 1px solid color(semi-trans-white);
     background: 1px solid color(trans-white);
     box-sizing: border-box;
@@ -42,12 +42,14 @@ $indicator-w: 0.9rem;
     background: red;
     box-sizing: border-box;
     z-index: 2;
-    &::after {
-      @include indicator-dash() { bottom: 0; }
-      transition: background 100ms linear;
+    @include indicator-dash() { bottom: 0; }
+    transition: background 60ms linear;
+    &:hover {
+      transform-origin: 50% 50%;
+      transform: scale(1.4);
     }
     &:hover, &.active {
-      &:after { background: white; }
+      background: white;
     }
   }
 }
