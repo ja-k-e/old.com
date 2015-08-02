@@ -21,12 +21,13 @@
     position: absolute;
     bottom: 2rem; left: 5rem;
     opacity: 0;
-    width: calc(100% - 10rem);
+    width: auto;
     height: 5rem;
     transform-style: preserve-3d;
 
     .prism-menu-list {
-      width: 400px;
+      left: -420px;
+      width: 420px;
       top: 50%;
       font-size: 1.2rem;
       transform: translateY(-50%);
@@ -84,6 +85,7 @@
   .prism-cont > .prism {
     @include prism(20px, color(trans-white));
     position: relative;
+    animation: prism-in 10s linear forwards infinite;
   }
   .prism-cont-2 > .prism {
     @include prism(10px, color(trans-white));
@@ -98,7 +100,7 @@
 @media (min-width: 600px) {
   .scroll #prism-menu {
     position: fixed;
-    width: 50%;
+    width: auto;
     bottom: 34px;
     left: 34px;
     .prism-cont > .prism {
@@ -115,9 +117,6 @@
       margin-left: (20px / -2);
     }
 
-    .prism-menu-list {
-
-    }
     &.open .prism-menu-list {
       left: 66px;
     }
@@ -134,7 +133,9 @@
 
   .prism-menu-list {
     position: absolute;
-    left: -200px;
+    left: -270px;
+    width: 270px;
+    pointer-events: none;
     opacity: 0;
     color: color(semi-trans-white);
     transition: opacity 350ms linear,
@@ -143,16 +144,18 @@
 
   &.open .prism-menu-list {
     opacity: 1;
+    display: block;
+    pointer-events: all;
     transition: opacity 350ms linear,
       left 800ms cubic-bezier(0, 1.26, 0.58, 1);
   }
 
   .prism-cont > .prism { opacity: 0.3; }
-  .prism-cont-2 > .prism { opacity: 0.2; }
+  .prism-cont-2 > .prism { opacity: 0.3; }
   .prism { transition: opacity 350ms ease-in-out; }
   .prism-cont:hover .prism-cont-2 .prism { opacity: 0.7; }
   &.open .prism-cont-2 > .prism { opacity: 0.7; }
-  &.open .prism-cont-2:hover > .prism { opacity: 0.2; }
+  &.open .prism-cont-2:hover > .prism { opacity: 0.3; }
 
   .prism {
     transform: rotateX(0deg) rotateY(0deg);
@@ -162,6 +165,7 @@
   .prism-cont {
     transform-style: preserve-3d;
   }
+
   .prism-cont-2 .prism {
     animation: prism-out 1000ms linear forwards;
     transform-origin: 50% 50%;

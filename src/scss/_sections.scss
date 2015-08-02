@@ -19,20 +19,20 @@
     padding-left: 2.5%;
     padding-right: 2.5%;
   }
-  padding-top: 4rem;
-  padding-bottom: 4rem;
   font-size: 0.8rem;
 }
 
 @media (min-width: 600px) {
-  .scroll main {
-    padding-bottom: 28rem;
+  .scroll main section:last-child {
+    padding-bottom: 34rem;
   }
 }
 
 .scroll section {
   width: 100%;
   padding: 2rem 0 2rem 2rem;
+  &:first-child { padding-top: 6rem; }
+  &:last-child { padding-bottom: 6rem; }
   box-sizing: border-box;
   z-index: 3;
   position: relative;
