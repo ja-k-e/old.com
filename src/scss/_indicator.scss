@@ -1,4 +1,4 @@
-$indicator-w: 0.8rem;
+$indicator-w: 12px;
 #indicator-container {
   position: absolute;
   top: 5%;
@@ -33,6 +33,18 @@ $indicator-w: 0.8rem;
     position: absolute;
     // border-radius: 50%;
     cursor: pointer;
+    &::after {
+      content: "";
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      top: 50%; left: 50%;
+      margin-left: -3px;
+      margin-top: -3px;
+      transform: scale(0.05);
+      transition: transform 200ms cubic-bezier(0,-0.5, 1, 1);
+    }
     @content;
   }
 
@@ -47,7 +59,11 @@ $indicator-w: 0.8rem;
       transform: scale(1.4);
     }
     &:hover, &.active {
-      background: white;
+      // background: white;
+      &::after {
+        transform: scale(1);
+        transition: transform 200ms cubic-bezier(0, 0, 0.6, 1.6);
+      }
     }
   }
 }
