@@ -24,8 +24,6 @@ gulp.task('connect', function() {
 // html
 gulp.task('html', function () {
   gulp.src('src/html/*.html')
-    // minify html
-    .pipe(plugins.minifyHtml())
     .on('error', errorHandler)
     // destination
     .pipe(gulp.dest(dest))
