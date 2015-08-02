@@ -22,7 +22,7 @@
     bottom: 2rem; left: 5rem;
     opacity: 0;
     width: auto;
-    height: 5rem;
+    height: 3.2rem;
     transform-style: preserve-3d;
 
     .prism-menu-list {
@@ -41,14 +41,14 @@
       left: 86px;
     }
 
-    .prism-cont { left: 25px; }
-    .prism-cont-2 { z-index: -1; }
+    .prism-container { left: 25px; }
+    .nested-prism-container { z-index: -1; }
 
-    .prism-cont > .prism {
+    .prism-container > .prism {
       @include prism(50px, color(trans-white));
     }
 
-    .prism-cont-2 > .prism {
+    .nested-prism-container > .prism {
       @include prism(25px, color(trans-white));
       position: absolute;
       top: 50%; left: 50%;
@@ -78,16 +78,16 @@
     }
   }
 
-  .prism-cont {
+  .prism-container {
     transform: none;
     left: 10px; top: 1rem;
   }
-  .prism-cont > .prism {
+  .prism-container > .prism {
     @include prism(20px, color(trans-white));
     position: relative;
     animation: prism-in 10s linear forwards infinite;
   }
-  .prism-cont-2 > .prism {
+  .nested-prism-container > .prism {
     @include prism(10px, color(trans-white));
     position: absolute;
     z-index: 9;
@@ -103,12 +103,12 @@
     width: auto;
     bottom: 34px;
     left: 34px;
-    .prism-cont > .prism {
+    .prism-container > .prism {
       @include prism(40px, color(trans-white));
       position: relative;
     }
-    .prism-cont { top: 0.4rem }
-    .prism-cont-2 > .prism {
+    .prism-container { top: 0.4rem }
+    .nested-prism-container > .prism {
       @include prism(20px, color(trans-white));
       position: absolute;
       z-index: 9;
@@ -150,37 +150,37 @@
       left 800ms cubic-bezier(0, 1.26, 0.58, 1);
   }
 
-  .prism-cont > .prism { opacity: 0.3; }
-  .prism-cont-2 > .prism { opacity: 0.3; }
+  .prism-container > .prism { opacity: 0.3; }
+  .nested-prism-container > .prism { opacity: 0.3; }
   .prism { transition: opacity 350ms ease-in-out; }
-  .prism-cont:hover .prism-cont-2 .prism { opacity: 0.7; }
-  &.open .prism-cont-2 > .prism { opacity: 0.7; }
-  &.open .prism-cont-2:hover > .prism { opacity: 0.3; }
+  .prism-container:hover .nested-prism-container .prism { opacity: 0.7; }
+  &.open .nested-prism-container > .prism { opacity: 0.7; }
+  &.open .nested-prism-container:hover > .prism { opacity: 0.3; }
 
   .prism {
     transform: rotateX(0deg) rotateY(0deg);
   }
 
 
-  .prism-cont {
+  .prism-container {
     transform-style: preserve-3d;
   }
 
-  .prism-cont-2 .prism {
+  .nested-prism-container .prism {
     animation: prism-out 1000ms linear forwards;
     transform-origin: 50% 50%;
     top: 50%; left: 50%;
     transform: rotateX(0deg) rotateY(0deg);
   }
-  &.open .prism-cont-2 > .prism { animation: prism-in 1000ms linear forwards; }
+  &.open .nested-prism-container > .prism { animation: prism-in 1000ms linear forwards; }
 }
 
 @keyframes prism-out {
-  from { transform: rotateX(-180deg) rotateY(-180deg); }
+  from { transform: rotateX(-135deg) rotateY(-135deg); }
   to   { transform: rotateX(0deg) rotateY(0deg); }
 }
 
 @keyframes prism-in {
   from { transform: rotateX(0deg) rotateY(0deg); }
-  to   { transform: rotateX(-180deg) rotateY(-180deg); }
+  to   { transform: rotateX(-135deg) rotateY(-135deg); }
 }
