@@ -8,21 +8,20 @@
   perspective: 3000px;
 }
 
-@mixin prism($width, $depth, $height, $color, $anim-in:false) {
+@mixin prism($dimension, $color, $anim-in:false) {
   $spacer: 0.25px; // extra spacing on z-axis
 
   transform-style: preserve-3d;
-  width: $width;
-  height: $height;
+  width: $dimension;
+  height: $dimension;
   display: block;
   transform-origin: 50% 50%;
-  transition: transform 200ms linear;
 
   // shape container is the canvas
   .shape {
     position: absolute;
-    width: $width;
-    height: $height;
+    width: $dimension;
+    height: $dimension;
     transform-style: preserve-3d;
     transform-origin: 50% 50%;
     @if ($anim-in == true) {
@@ -49,59 +48,45 @@
     }
   }
 
+  // all axis
+  .width, .depth, .height {
+    width: $dimension;
+    &::before, &::after {
+      background: $color;
+      width: $dimension;
+      height: $dimension;
+    }
+    &::before {
+      transform: translateZ($dimension / 2 + $spacer);
+    }
+  }
+
   // width axis
   .width {
     transform: translateX(-50%);
-    width: $width;
     // sides
-    &::before, &::after {
-      background: $color;
-      width: $width;
-      height: $height;
-    }
-    &::before {
-      transform: translateZ($depth / 2 + $spacer);
-    }
     &::after {
-      transform: translateZ($depth / -2 + $spacer) rotateX(180deg) rotateZ(180deg);
+      transform: translateZ($dimension / -2 + $spacer) rotateX(180deg) rotateZ(180deg);
     }
   }
 
   // depth axis
   .depth {
     transform: translateX(-50%) rotateY(90deg);
-    width: $depth;
     // sides
-    &::before, &::after {
-      background: $color;
-      width: $depth;
-      height: $height;
-    }
-    &::before {
-      transform: translateZ($width / 2 + $spacer);
-    }
     &::after {
-      transform: translateZ($width / -2 + $spacer) rotateY(180deg);
+      transform: translateZ($dimension / -2 + $spacer) rotateY(180deg);
     }
   }
 
   // height axis
   .height {
     transform: translate(-50%,-50%) rotateX(90deg);
-    width: $width;
-    height: $depth;
+    height: $dimension;
     top: 50%;
     // sides
-    &::before, &::after {
-      background: $color;
-      width: $width;
-      height: $depth;
-    }
-    &::before {
-      transform: translateZ($height / 2 + $spacer);
-    }
     &::after {
-      transform: translateZ($height / -2 + $spacer) rotateX(180deg);
+      transform: translateZ($dimension / -2 + $spacer) rotateX(180deg);
     }
   }
 }

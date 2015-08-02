@@ -20,7 +20,7 @@ function Site(params) {
       // console.debug("Wheel Complete");
       app.imageLooper();
 
-      var path = [app.frames.hi_path, app.frames.prefix, Math.round(app.progress.currentFrame), app.frames.ext].join(""),
+      var path = [app.frames.hi_path, app.frames.prefix, Math.ceil(app.progress.currentFrame), app.frames.ext].join(""),
           img = new Image();
       img.src = path;
       img.onload = function() {
@@ -32,16 +32,15 @@ function Site(params) {
 
     // loops through images once wheel movement stops and hi res is loaded
     imageLooper: function() {
-      var i = 0, inc = 1,//0.25,
+      var i = 0, inc = 1,
           distance = 4, direction = 1,
           time = 200;
           images = 0;
 
       app.looping = function() {
-        if (app.progress.currentFrame > 60 && app.progress.currentFrame < 203) {
+        if (app.progress.currentFrame >= app.sections[0].in_frame && app.progress.currentFrame < app.sections[app.sections.length - 1].out_frame) {
           app.loopTimeout = setTimeout(function() {
             var frame = app.progress.currentFrame;
-            console.log(frame);
             // if going up
             if (direction == 1) {
               // if we havent exceeded limit
@@ -67,8 +66,8 @@ function Site(params) {
             app.looping();
           }, time);
         }
-
       }
+
       app.looping();
     },
 
@@ -222,7 +221,7 @@ function Site(params) {
 
     // spin prism menu on progress
     prismMenuSpin: function() {
-      var amount = -360 * ((app.progress.currentFrame - 1) / (app.frames.count - 1)) + 45;
+      var amount = -360 * ((app.progress.currentFrame - 1) / (app.frames.count - 1));
       var transform = "rotateX("+amount+"deg) rotateY("+amount+"deg)";
       app.progress.spinnerPrism.style.webkitTransform = transform;
       app.progress.spinnerPrism.style.transform = transform;
@@ -236,7 +235,7 @@ function Site(params) {
       var inc = app.frames.inc,
           direction = "";
 
-      // clear static loop
+      // clear static loop if running
       clearTimeout(app.loopTimeout);
 
       // handle current frame
@@ -264,8 +263,9 @@ function Site(params) {
       app.sceneController();
 
       // maybe a random image
-      var dice = Math.random(),
-          frame = (dice < 0.005) ? (Math.random() * app.frames.count) : app.progress.currentFrame;
+      // var dice = Math.random(),
+          // frame = (dice < 0.005) ? (Math.random() * app.frames.count) : app.progress.currentFrame;
+      var frame = app.progress.currentFrame;
 
       // set the image
       app.imageSetter(app.frames.data[Math.ceil(frame) - 1]);
@@ -293,12 +293,12 @@ function Site(params) {
 
       for(var i = 0; i < app.sections.length; i++) {
         var section = app.sections[i];
-        if (frame >= section.in_frame && frame < section.out_frame && !section.visible) {
+        if (frame >= section.in_frame && frame < section.out_frame - 5 && !section.visible) {
           if(!app.goingToFrame) {
             addClass(section.el, "active");
             section.visible = true;
           }
-        } else if ((frame < section.in_frame || frame >= section.out_frame) && section.visible) {
+        } else if ((frame < section.in_frame || frame >= section.out_frame - 5) && section.visible) {
           removeClass(section.el, "active");
           section.visible = false;
         }

@@ -12,12 +12,9 @@
 
   .message { z-index: 1; }
 
-  // sizes
-  $width: 100px; $depth: 100px; $height: 100px;
-
   // prism element usage (width, depth, height)
   .prism {
-    @include prism($width, $depth, $height, color(trans-white), true);
+    @include prism(100px, color(trans-white), true);
   }
 
 

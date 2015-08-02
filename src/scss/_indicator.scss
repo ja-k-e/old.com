@@ -1,4 +1,4 @@
-$indicator-w: 0.9rem;
+$indicator-w: 0.8rem;
 #indicator-container {
   position: absolute;
   top: 5%;
@@ -31,15 +31,13 @@ $indicator-w: 0.9rem;
     background: 1px solid color(trans-white);
     box-sizing: border-box;
     position: absolute;
-    border-radius: 50%;
+    // border-radius: 50%;
     cursor: pointer;
     @content;
   }
 
   > span {
     position: absolute;
-    border-radius: 50%;
-    background: red;
     box-sizing: border-box;
     z-index: 2;
     @include indicator-dash() { bottom: 0; }

@@ -22,7 +22,7 @@ var settings = {
   sections: []
 };
 
-var start = 52,
+var start = 56,
     stop = 210,
     pad = 10,
     sections = 6;
