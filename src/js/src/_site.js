@@ -13,6 +13,13 @@ function Site(params) {
     },
 
 
+    // slowly increases/decreases background opacity on progress
+    backgroundOpacity: function() {
+      var opacity = (app.progress.percent + 0.2) * 0.5 + 0.5;
+      app.background.element.style.opacity = opacity;
+    },
+
+
     // loads a high resolution image when wheel movement stops
     imageLoadHiRes: debounce(function() {
       app.progress.scrolling = false;
@@ -258,6 +265,10 @@ function Site(params) {
 
       // spin the prism
       app.prismMenuSpin();
+
+
+      // change the backgorund opacity
+      app.backgroundOpacity();
 
       // scene control
       app.sceneController();
