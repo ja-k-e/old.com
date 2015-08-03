@@ -1,3 +1,15 @@
+section {
+  opacity: 0;
+  visibility: hidden;
+}
+.loaded section,
+.scroll section {
+  opacity: 1;
+}
+section.active {
+  visibility: visible;
+}
+
 .full section {
   position: absolute;
   top: 10vh; left: 50%; right: 10%;
