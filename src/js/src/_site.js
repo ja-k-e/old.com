@@ -6,7 +6,7 @@ function Site(params) {
     // initialization
     init: function() {
       app.mode = app.modeDetect();
-      addClass(document.body, app.mode);
+      addClass(document.getElementsByTagName('html')[0], app.mode);
       app.imagePreloader();
       app.prismMenuSetup();
       if (app.mode == "full") app.navigationLoad();
@@ -15,8 +15,8 @@ function Site(params) {
 
     // slowly increases/decreases background opacity on progress
     backgroundOpacity: function() {
-      // var opacity = (app.progress.percent + 0.2) * 0.5 + 0.5;
-      // app.background.element.style.opacity = opacity;
+      var opacity = (app.progress.percent + 0.2) * 0.5 + 0.5;
+      app.background.element.style.opacity = opacity;
     },
 
 
@@ -103,7 +103,7 @@ function Site(params) {
         if (app.frames.loaded.count == app.frames.count) {
           app.imagesLoadedHandler();
           addClass(app.progress.loader, app.progress.completeClassName);
-          addClass(document.body, "loaded");
+          addClass(document.getElementsByTagName('html')[0], app.progress.completeClassName);
           console.debug("Lo Res Images Loaded", app.frames.loaded.count);
           if (app.frames.loaded.partial) console.warn("Not All Images Loaded Successfully");
         }
