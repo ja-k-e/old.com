@@ -6,6 +6,7 @@ section {
 .scroll section {
   opacity: 1;
 }
+.scroll section,
 section.active {
   visibility: visible;
 }
