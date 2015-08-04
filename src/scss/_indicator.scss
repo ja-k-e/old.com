@@ -2,16 +2,19 @@ $indicator-w: 12px;
 #indicator-container {
   position: absolute;
   top: 5%;
-  right: 5vh;
+  right: 2.5%;
   width: $indicator-w;
   bottom: 5%;
   opacity: 0;
   transition: opacity 200ms linear;
   box-sizing: border-box;
+  z-index: 10;
+
   .loaded & { opacity: 0.5; &:hover { opacity: 1; } }
-  // border-top: 2px solid color(semi-trans-white);
-  // border-bottom: 2px solid color(semi-trans-white);
-  z-index: 3;
+
+  .static & {
+    opacity: 0.7;
+  }
 
   #indicator {
     position: absolute;
@@ -66,4 +69,42 @@ $indicator-w: 12px;
       }
     }
   }
+}
+
+
+@media (min-width: $s-md) {
+  right: 5vh;
+}
+
+.loaded #scroll-down,
+.static #scroll-down {
+  position: fixed;
+  color: white;
+  z-index: 10;
+  bottom: 1rem;
+  left: 50%;
+  width: 50px;
+  margin-left: -25px;
+  color: white;
+  font-size: 3rem;
+  animation: pulse-down 2s ease-in-out infinite;
+  svg {
+    display: block;
+    width: 100%;
+  }
+  &[active="false"] { display: none; }
+}
+
+@media (min-width: $s-md) {
+  .loaded #scroll-down,
+  .static #scroll-down {
+    width: 90px;
+    margin-left: -45px;
+  }
+}
+
+@keyframes pulse-down {
+  0%, 100% { transform: translateY(0); }
+  33.33% { transform: translateY(20%); }
+  66.66% { transform: translateY(-5%); }
 }

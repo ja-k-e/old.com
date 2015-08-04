@@ -1,203 +1,136 @@
-.scroll header {
-  width: 100%;
+// behavior once page is loaded
+.loaded #prism-menu,
+.static #prism-menu {
+  opacity: 1;
 }
 
-@media (min-width: 600px) {
-  .scroll header #prism-menu {
-    font-size: 1rem;
-  }
-}
+#prism-menu {
+  z-index: 10;
+  position: absolute;
+  top: 1rem; left: 1rem;
+  width: auto;
+  height: 30px;
+  opacity: 0;
+  transition: opacity 200ms linear;
+  transform-style: preserve-3d;
 
+  color: white;
+  cursor: pointer;
 
-// full view menu
-.full {
-  // behavior once page is loaded
-  &.loaded #prism-menu {
-    opacity: 1;
-  }
-
-  #prism-menu {
-
+  .prism-menu-list {
+    transform: translateY(-50%);
     position: absolute;
-    bottom: 2rem; left: 5rem;
+    top: 50%;
+    left: -270px;
+    width: 270px;
+    display: block;
+    pointer-events: none;
     opacity: 0;
-    width: auto;
+    color: color(semi-trans-white);
+    transition: opacity 350ms linear,
+      left 800ms cubic-bezier(0.4,-0.37, 0.58, 1);
+
+    a {
+      padding-right: 0.25rem;
+      animation: display-none 350ms linear forwards;
+      & ~ a { padding-left: 0.25rem; }
+    }
+  }
+
+  &.open .prism-menu-list {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+    left: 46px;
+    transition: opacity 350ms linear,
+      left 800ms cubic-bezier(0, 1.26, 0.58, 1);
+  }
+
+  .prism {
+    animation: prism-out 500ms ease-in-out forwards;
+  }
+  &.open .prism {
+    animation: prism-in 500ms ease-in-out forwards;
+  }
+
+
+  .prism-container {
+    background: color(trans-white);
+    border: 1px solid color(trans-white);
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    height: 30px; width: 30px;
+    margin-top: -15px;
+  }
+
+  .prism-container > .prism {
+    @include prism(15px, color(trans-white));
+    margin-top: (15px / -2);
+    margin-left: (15px / -2);
+    position: absolute;
+    top: 50%; left: 50%;
+  }
+
+  .prism { transition: opacity 350ms ease-in-out; }
+
+  .prism-container > .prism { opacity: 0.3; }
+  .prism-container:hover .prism { opacity: 0.7; }
+  &.open .prism-container > .prism { opacity: 0.7; }
+  &.open .prism-container:hover > .prism { opacity: 0.3; }
+
+  #progress-spinner-prism {
+    appearance: none;
+    border: none;
+    background: transparent;
+    visibility: none;
+    outline: none;
+  }
+}
+
+
+@media (min-width: $s-md) {
+  #prism-menu {
     height: 3.2rem;
-    transform-style: preserve-3d;
+    top: auto;
+    bottom: 2rem; left: 2rem;
 
     .prism-menu-list {
       left: -420px;
       width: 420px;
       top: 50%;
-      font-size: 1.2rem;
-      transform: translateY(-50%);
+      font-size: 1.1rem;
       a {
         padding-right: 0.5rem;
         & ~ a { padding-left: 0.5rem; }
       }
     }
-
     &.open .prism-menu-list {
-      left: 86px;
+      left: 76px;
     }
 
-    .prism-container { left: 25px; }
-    .nested-prism-container { z-index: -1; }
+    .prism-container {
+      height: 50px; width: 50px;
+      transform: translateZ(0);
+      margin-top: -25px;
+    }
 
     .prism-container > .prism {
-      @include prism(50px, color(trans-white));
-    }
-
-    .nested-prism-container > .prism {
       @include prism(25px, color(trans-white));
-      position: absolute;
-      top: 50%; left: 50%;
       margin-top: (25px / -2);
       margin-left: (25px / -2);
     }
   }
 }
 
-// scroll view menu
-.scroll #prism-menu {
-  position: relative;
-  height: 3.2rem;
-  opacity: 1;
-  width: 100%;
-  background: transparent;
 
-  &.open .prism-menu-list {
-    left: 46px;
-  }
-
-  .prism-menu-list {
-    top: 14px;
-    a {
-      padding-right: 0.2rem;
-      & ~ a { padding-left: 0.2rem; }
-    }
-  }
-
-  .prism-container,
-  .nested-prism-container {
-    transform: none;
-    position: absolute;
-  }
-  .prism-container {
-    left: 10px; top: 1rem;
-  }
-  .nested-prism-container {
-    top: 50%; left: 10px;
-  }
-
-  .prism-container > .prism {
-    @include prism(20px, color(trans-white));
-    position: relative;
-    animation: prism-spin 10s linear forwards infinite;
-  }
-
-  .nested-prism-container > .prism {
-    @include prism(10px, color(trans-white));
-    position: absolute;
-    z-index: 9;
-    top: 50%; left: 50%;
-    margin-top: (10px / -2);
-    margin-left: (10px / -2);
-  }
-}
-
-@media (min-width: 600px) {
-  .scroll #prism-menu {
-    position: fixed;
-    width: auto;
-    bottom: 34px;
-    left: 34px;
-    .prism-container > .prism {
-      @include prism(40px, color(trans-white));
-      position: relative;
-    }
-    .prism-container { top: 0.4rem }
-    .nested-prism-container {
-      top: 50%; left: 20px;
-    }
-    .nested-prism-container > .prism {
-      @include prism(20px, color(trans-white));
-      position: absolute;
-      z-index: 9;
-      top: 50%; left: 50%;
-      margin-top: (20px / -2);
-      margin-left: (20px / -2);
-    }
-
-    &.open .prism-menu-list {
-      left: 66px;
-    }
-  }
-}
-
-
-#prism-menu {
-  z-index: 9;
-  transition: opacity 200ms linear,
-    background 200ms ease-in-out;
-  color: white;
-  cursor: pointer;
-
-  .prism-menu-list {
-    position: absolute;
-    left: -270px;
-    width: 270px;
-    pointer-events: none;
-    opacity: 0;
-    color: color(semi-trans-white);
-    transition: opacity 350ms linear,
-      left 800ms cubic-bezier(0.4,-0.37, 0.58, 1);
-  }
-
-  &.open .prism-menu-list {
-    opacity: 1;
-    display: block;
-    pointer-events: all;
-    transition: opacity 350ms linear,
-      left 800ms cubic-bezier(0, 1.26, 0.58, 1);
-  }
-
-  .prism-container > .prism { opacity: 0.3; }
-  .nested-prism-container > .prism { opacity: 0.3; }
-  .prism { transition: opacity 350ms ease-in-out; }
-  .prism-container:hover .nested-prism-container .prism { opacity: 0.7; }
-  &.open .nested-prism-container > .prism { opacity: 0.7; }
-  &.open .nested-prism-container:hover > .prism { opacity: 0.3; }
-
-  .prism {
-    transform: rotateX(0deg) rotateY(0deg);
-  }
-
-
-  .prism-container {
-    transform-style: preserve-3d;
-  }
-
-  .nested-prism-container .prism {
-    animation: prism-out 1000ms linear forwards;
-    transform-origin: 50% 50%;
-    top: 50%; left: 50%;
-    transform: rotateX(0deg) rotateY(0deg);
-  }
-  &.open .nested-prism-container > .prism { animation: prism-in 1000ms linear forwards; }
-}
 
 @keyframes prism-out {
-  from { transform: rotateX(-135deg) rotateY(-135deg); }
-  to   { transform: rotateX(0deg) rotateY(0deg); }
+  from { transform: rotateX(-135deg) rotateY(-135deg) translateZ(1px); }
+  to   { transform: rotateX(0deg) rotateY(0deg) translateZ(1px); }
 }
 
 @keyframes prism-in {
-  from { transform: rotateX(0deg) rotateY(0deg); }
-  to   { transform: rotateX(-135deg) rotateY(-135deg); }
-}
-
-@keyframes prism-spin {
-  from { transform: rotateX(0deg) rotateY(0deg); }
-  to   { transform: rotateX(-180deg) rotateY(-180deg); }
+  from { transform: rotateX(0deg) rotateY(0deg) translateZ(1px); }
+  to   { transform: rotateX(-135deg) rotateY(-135deg) translateZ(1px); }
 }

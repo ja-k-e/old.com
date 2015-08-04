@@ -12,3 +12,8 @@ $colors: (
 @function color($which) {
   @return map-get($colors, $which);
 }
+
+$s-sm: 340px;
+$s-md: 770px;
+$s-lg: 1024px;
+$s-xl: 1200px;

@@ -3,13 +3,33 @@ function Site(params) {
 
   var app = {
 
+    skrollr: undefined,
+
     // initialization
     init: function() {
       app.mode = app.modeDetect();
       addClass(document.getElementsByTagName('html')[0], app.mode);
-      app.imagePreloader();
       app.prismMenuSetup();
-      if (app.mode == "full") app.navigationLoad();
+      // scroll window
+      if (app.mode == "full") {
+        app.imagePreloader();
+        app.sectionsLoad(app.frames.total_steps);
+        app.navigationLoad();
+        app.navigationArrowKeys();
+        // set the app skrollr
+        app.skrollr = skrollr.init({
+          beforerender: app.skrollrGo,
+          smoothScrolling: true
+        });
+      } else if (app.mode == "static") {
+        app.sectionsLoad(5000, true);
+        // set the app skrollr
+        app.skrollr = skrollr.init({
+          beforerender: app.skrollrGo,
+          smoothScrolling: true
+        });
+      }
+      app.scrollToLocation(0);
     },
 
 
@@ -20,6 +40,18 @@ function Site(params) {
     },
 
 
+    gotToPrevSection: function() {
+      app.scrollToLocation(app.frames.positions[Math.max(app.frames.currentPosition - 1, 0)] - 1);
+    },
+
+    gotToNextSection: function() {
+      app.scrollToLocation(Math.min(
+        app.frames.positions[Math.min(app.frames.currentPosition + 1, app.frames.positions.length - 1)] + 200,
+        app.frames.positions[app.frames.positions.length - 1]
+      ));
+    },
+
+
     // loads a high resolution image when wheel movement stops
     imageLoadHiRes: debounce(function() {
       app.progress.scrolling = false;
@@ -27,12 +59,12 @@ function Site(params) {
       // console.debug("Wheel Complete");
       app.imageLooper();
 
-      var path = [app.frames.hi_path, app.frames.prefix, Math.ceil(app.progress.currentFrame), app.frames.ext].join(""),
+      var path = [app.frames.hi_path, app.frames.prefix, Math.max(Math.ceil(app.progress.currentFrame), 1), app.frames.ext].join(""),
           img = new Image();
       img.src = path;
       img.onload = function() {
         console.debug("Hi Res Loaded");
-        app.imageSetter(img);
+        app.imageSet(img);
       }
     }, 500),
 
@@ -67,7 +99,7 @@ function Site(params) {
                 img.src = path;
 
             // set the image
-            app.imageSetter(img);
+            app.imageSet(img);
 
             // call it again
             app.looping();
@@ -82,15 +114,13 @@ function Site(params) {
     // preload lo res images for animation
     imagePreloader: function() {
 
-      if (app.mode == "full") {
-        for (var i = 1; i <= app.frames.count; i++) {
-          var path = [app.frames.lo_path, app.frames.prefix, i, app.frames.ext].join(""),
-              img = new Image();
-          img.src = path;
-          img.onload = imageLoad;
-          img.onerror = imageLoadError;
-          app.frames.data.push(img);
-        }
+      for (var i = 1; i <= app.frames.count; i++) {
+        var path = [app.frames.lo_path, app.frames.prefix, i, app.frames.ext].join(""),
+            img = new Image();
+        img.src = path;
+        img.onload = imageLoad;
+        img.onerror = imageLoadError;
+        app.frames.data.push(img);
       }
 
       function imageLoadError() {
@@ -122,7 +152,7 @@ function Site(params) {
 
 
     // sets an image to the canvas
-    imageSetter: function(img) {
+    imageSet: function(img) {
       var context = app.background.element.getContext("2d");
       // image, x, y, width, height
       context.drawImage(img, 0, 0, 1280, 720);
@@ -132,144 +162,79 @@ function Site(params) {
     // once all lo resolution images are loaded
     imagesLoadedHandler: function() {
       app.progress.currentFrame = 1;
-      window.addEventListener("wheel", app.scrollHandler);
     },
 
 
 
     // detect full animation or static mode
     modeDetect: function() {
-      var nVer = navigator.appVersion;
-      var nAgt = navigator.userAgent;
-      var browserName  = navigator.appName;
-      var fullVersion  = ''+parseFloat(navigator.appVersion);
-      var majorVersion = parseInt(navigator.appVersion,10);
-      var nameOffset,verOffset,ix;
-
-      // In Opera, the true version is after "Opera" or after "Version"
-      if ((verOffset=nAgt.indexOf("Opera"))!=-1) {
-       browserName = "Opera";
-       fullVersion = nAgt.substring(verOffset+6);
-       if ((verOffset=nAgt.indexOf("Version"))!=-1)
-         fullVersion = nAgt.substring(verOffset+8);
-      }
-      // In MSIE, the true version is after "MSIE" in userAgent
-      else if ((verOffset=nAgt.indexOf("MSIE"))!=-1) {
-       browserName = "Microsoft Internet Explorer";
-       fullVersion = nAgt.substring(verOffset+5);
-      }
-      // In Chrome, the true version is after "Chrome"
-      else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {
-       browserName = "Chrome";
-       fullVersion = nAgt.substring(verOffset+7);
-      }
-      // In Safari, the true version is after "Safari" or after "Version"
-      else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {
-       browserName = "Safari";
-       fullVersion = nAgt.substring(verOffset+7);
-       if ((verOffset=nAgt.indexOf("Version"))!=-1)
-         fullVersion = nAgt.substring(verOffset+8);
-      }
-      // In Firefox, the true version is after "Firefox"
-      else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
-       browserName = "Firefox";
-       fullVersion = nAgt.substring(verOffset+8);
-      }
-      // In most other browsers, "name/version" is at the end of userAgent
-      else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) <
-                (verOffset=nAgt.lastIndexOf('/')) )
-      {
-       browserName = nAgt.substring(nameOffset,verOffset);
-       fullVersion = nAgt.substring(verOffset+1);
-       if (browserName.toLowerCase()==browserName.toUpperCase()) {
-        browserName = navigator.appName;
-       }
-      }
-      // trim the fullVersion string at semicolon/space if present
-      if ((ix=fullVersion.indexOf(";"))!=-1)
-         fullVersion=fullVersion.substring(0,ix);
-      if ((ix=fullVersion.indexOf(" "))!=-1)
-         fullVersion=fullVersion.substring(0,ix);
-
-      majorVersion = parseInt(''+fullVersion,10);
-      if (isNaN(majorVersion)) {
-       fullVersion  = ''+parseFloat(navigator.appVersion);
-       majorVersion = parseInt(navigator.appVersion,10);
-      }
-
       var mobileOrTablet = false;
       (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))mobileOrTablet = true})(navigator.userAgent||navigator.vendor||window.opera);
-      if (mobileOrTablet || browserName == "Safari") {
-        return "scroll";
+      if (mobileOrTablet) {
+        return "static";
       } else {
         return "full";
       }
     },
 
 
-    // jump to a specific frame
-    navigationGoToFrame: function(which) {
-      var distance = which - app.progress.currentFrame,
-          move;
-      if (!app.goingToFrame) {
-        app.goingToFrame = true;
-        if (distance > 0) {
-          move = function() {
-            setTimeout(function() {
-              if(app.progress.currentFrame < which) {
-                app.progressHandler(1);
-                app.progress.currentFrame++;
-                move();
-              } else {
-                app.goingToFrame = false;
-                app.sceneController();
-                clearTimeout(move);
-              }
-            }, 30);
-          }
-        } else {
-          move = function() {
-            setTimeout(function() {
-              if(app.progress.currentFrame > which) {
-                app.progressHandler(-1);
-                app.progress.currentFrame--;
-                move();
-              } else {
-                app.goingToFrame = false;
-                app.sceneController();
-                clearTimeout(move);
-              }
-            }, 30);
-          }
+
+    // handling arrow keydown
+    navigationArrowKeys: function() {
+      var lastEvent;
+      var heldKeys = {};
+
+      window.onkeydown = function(event) {
+        // dont allow holding
+        if (lastEvent && lastEvent.keyCode == event.keyCode) return;
+        lastEvent = event;
+        switch (event.keyCode) {
+          case 37:
+          case 38:
+          case 33:
+            app.gotToPrevSection();
+            break;
+          case 39:
+          case 40:
+          case 34:
+            app.gotToNextSection();
+            break;
         }
-        move();
-      }
+        heldKeys[event.keyCode] = true;
+      };
+
+      window.onkeyup = function(event) {
+        lastEvent = null;
+        delete heldKeys[event.keyCode];
+      };​
     },
 
 
     // load the progress navigation
     navigationLoad: function() {
       // first span
-      navItem(1);
+      navItem(0, app.frames.positions[0]);
       // remaining navigation
       for (var i = 0; i < app.sections.length; i++) {
         (function() {
           var comp = app.sections[i];
-          navItem(comp.in_frame + 1);
+          navItem(comp.navItemTop, app.frames.positions[i + 1]);
         }())
       }
       // last span
-      navItem(app.frames.count - 1);
+      navItem(1, app.frames.positions[app.frames.positions.length - 1]);
 
       // navigation
-      function navItem(to_frame) {
+      function navItem(to_perc, offset) {
         var navItem = document.createElement("span");
-        navItem.id = "nav-item-" + to_frame;
-        navItem.setAttribute("data-frame",to_frame);
+        navItem.id = "nav-item-" + Math.round(to_perc * app.frames.count);
+        navItem.setAttribute("data-frame", Math.round(to_perc * app.frames.count));
+
         navItem.addEventListener("click", function() {
-          app.navigationGoToFrame(to_frame);
+          app.scrollToLocation(offset);
         }, false);
-        navItem.style.top = Math.round(to_frame / app.frames.count * 10000) / 100 + "%";
+
+        navItem.style.top = Math.round(to_perc * 10000) / 100 + "%";
         app.progress.navItems.push(navItem);
         app.progress.indicatorContainer.appendChild(navItem);
       }
@@ -296,51 +261,31 @@ function Site(params) {
     // records direction and state on wheel movement, moves progress indicator
     progressHandler: function(delta) {
 
-      // animation rate
-      var inc = app.frames.inc,
-          direction = "";
-
       // clear static loop if running
       clearTimeout(app.loopTimeout);
 
-      // handle current frame
-      if (delta <= -1) { direction = "up"; app.progress.currentFrame -= inc ; }
-      if (delta >= 1) { direction = "down"; app.progress.currentFrame += inc; }
-      if (app.progress.currentFrame < 1) app.progress.currentFrame = 1;
-      if (app.progress.currentFrame > app.frames.data.length) app.progress.currentFrame = app.frames.data.length;
-
-      // handle direction
-      if (direction != app.progress.direction) {
-        replaceClass(document.body, app.progress.direction, direction);
-        app.progress.direction = direction;
-      }
-
       // handle progress
-      var ratio = (app.progress.currentFrame - 1) / (app.frames.data.length - 1);
-      app.progress.percent = Math.round(ratio * 1000) / 1000;
-      app.progress.indicator.style.bottom = (Math.round((1 - ratio) * 10000) / 100) + "%";
+      app.progress.indicator.style.bottom = (Math.round((1 - app.progress.percent) * 10000) / 100) + "%";
 
-
-      // spin the prism
-      app.prismMenuSpin();
-
-
-      // change the backgorund opacity
-      app.backgroundOpacity();
 
       // scene control
       app.sceneController();
 
-      // maybe a random image
-      // var dice = Math.random(),
-          // frame = (dice < 0.005) ? (Math.random() * app.frames.count) : app.progress.currentFrame;
-      var frame = app.progress.currentFrame;
+      if(app.mode == "full") {
+        // change the background opacity
+        app.backgroundOpacity();
+        // set the image
+        var currentFrame = Math.ceil(app.progress.percent * app.frames.data.length);
+        var img = app.frames.data[currentFrame - 1];
+        if (img) app.imageSet(img);
 
-      // set the image
-      app.imageSetter(app.frames.data[Math.ceil(frame) - 1]);
+        app.progress.currentFrame = currentFrame;
 
-      // swap in hi res image when stopped
-      app.imageLoadHiRes();
+        // swap in hi res image when stopped
+        app.imageLoadHiRes();
+      }
+
+
 
       // console.debug("Current Frame:", app.progress.currentFrame);
     },
@@ -353,42 +298,161 @@ function Site(params) {
       for(var i = 0; i < app.progress.navItems.length; i++) {
         var item = app.progress.navItems[i],
             itemFrame = parseInt(item.getAttribute("data-frame"));
-        if (app.progress.direction == "down" && frame >= itemFrame) {
-          if (!hasClass(item, "active")) addClass(item,"active");
-        } else if (app.progress.direction == "up" && Math.floor(frame) < itemFrame - 1) {
-          removeClass(item, "active");
-        }
-      }
-
-      for(var i = 0; i < app.sections.length; i++) {
-        var section = app.sections[i];
-        if (frame >= section.in_frame && frame < section.out_frame - 5 && !section.visible) {
-          if(!app.goingToFrame) {
-            addClass(section.el, "active");
-            section.visible = true;
+        if (app.progress.direction == "down" && frame >= itemFrame - 2) {
+          if (!hasClass(item, "active")) {
+            addClass(item,"active");
+            app.frames.currentPosition = i;
           }
-        } else if ((frame < section.in_frame || frame >= section.out_frame - 5) && section.visible) {
-          removeClass(section.el, "active");
-          section.visible = false;
+        } else if (app.progress.direction == "up" && Math.floor(frame) < itemFrame - 1) {
+          if (hasClass(item, "active")) {
+            removeClass(item, "active");
+            app.frames.currentPosition = i - 1;
+          }
         }
       }
     },
 
 
-    // handle each deltaY change
-    scrollHandler: function(e) {
+
+    // scroll window to location using skrollr
+    scrollToLocation: function(destination) {
+      addClass(document.body, "scrolling");
+      app.skrollr.animateTo(destination, {
+        duration: 1000,
+        easing: 'cubic',
+        done: function() {
+          removeClass(document.body, "scrolling");
+        }
+      });
+    },
 
 
-      e.preventDefault(); // No scroll
 
-      // set scrolling state
-      if (!app.progress.scrolling) app.progress.scrolling = true;
+    // load all sections and their content
+    sectionsLoad: function (total_steps, skip_buffers) {
+      var in_perc = app.sections[0].in_perc,
+          out_perc = app.sections[app.sections.length - 1].out_perc,
+          total_frames = app.frames.count,
+          total_items = 0;
+
+      for(var s = 0; s < app.sections.length; s++) total_items += app.sections[s].content.length;
+
+      var intro_length = (!skip_buffers) ? Math.round(in_perc * total_steps) : 0,
+          outro_length = (!skip_buffers) ? Math.round((1 - out_perc) * total_steps) : 0,
+          viewing_length = total_steps - outro_length - intro_length,
+          item_length = Math.round(viewing_length / total_items),
+          skrollr_step = Math.floor(item_length * 0.3),
+          skrollr_hold = Math.floor(item_length * 0.3),
+          skrollr_dur = item_length - skrollr_step - skrollr_hold,
+          ongoing = intro_length;
+
+      if (!skip_buffers) {
+        // add first section
+        var $section = document.createElement("section");
+        // unique id for section
+        $section.id = "section-0";
+        app.frames.positions.push(0);
+        $section.innerHTML = "<div data-0='opacity: 0;' data-" + intro_length + "='opacity: 0;'></div>";
+        app.sectionsContainer.appendChild($section);
+      }
+
+      // for each section
+      for(var s = 0; s < app.sections.length; s++) {
+        var section = app.sections[s],
+            $section = document.createElement("section");
+
+        // unique id for section
+        $section.id = "section-" + (s+1);
+
+        // section html to append
+        var section_html = "";
+
+        // for each section content
+        var hold = skrollr_hold * section.content.length,
+            // when all in section begin fade out
+            all_in = ongoing + (skrollr_step * (section.content.length + 1)) + hold,
+            // when all in section are completely faded out
+            all_stop = all_in + skrollr_dur;
+        // for each content item in section
+        for (var c = 0; c < section.content.length; c++) {
+
+          // relative start
+          var start = ongoing + skrollr_step,
+              // relative completely faded in
+              item_in = start + skrollr_dur;
+
+          if(skip_buffers && s == 0) {
+            var skrollr_data = ["",
+              "data-" + all_in + "='opacity: 1; transform: translateX(0rem)'",
+              "data-" + Math.round(all_in + (all_stop - all_in) * 0.2) + "='opacity: 0.8; transform: translateX(0.4rem)'",
+              "data-" + all_stop + "='opacity: 0; transform: translateX(-1rem)'"
+            ].join(" ");
+
+          } else if (skip_buffers && s == app.sections.length - 1 ) {
+            var skrollr_data = ["",
+              "data-" + start + "='opacity: 0; transform: translateX(-1rem)'",
+              "data-" + Math.round(start + (item_in - start) * 0.8) + "='opacity: 0.8; transform: translateX(0.4rem)'",
+              "data-" + item_in + "='opacity: 1; transform: translateX(0rem)'",
+              "data-" + all_in + "='opacity: 1; transform: translateX(0rem)'",
+              "data-" + all_stop + "='opacity: 1; transform: translateX(0rem)'"
+            ].join(" ");
+
+          } else {
+            var skrollr_data = ["",
+              "data-" + start + "='opacity: 0; transform: translateX(-1rem)'",
+              "data-" + Math.round(start + (item_in - start) * 0.8) + "='opacity: 0.8; transform: translateX(0.4rem)'",
+              "data-" + item_in + "='opacity: 1; transform: translateX(0rem)'",
+              "data-" + all_in + "='opacity: 1; transform: translateX(0rem)'",
+              "data-" + Math.round(all_in + (all_stop - all_in) * 0.2) + "='opacity: 0.8; transform: translateX(0.4rem)'",
+              "data-" + all_stop + "='opacity: 0; transform: translateX(-1rem)'"
+            ].join(" ");
+          }
+
+          // if first item
+          if (c == 0) {
+            if (s != 0 ) $section.setAttribute("data-0", "@active: false;");
+            $section.setAttribute("data-" + start, "@active: true;");
+          }
+          // if last item, set navItem top position for section
+          if (c == section.content.length - 1) {
+            $section.setAttribute("data-" + all_stop, "@active: false;");
+            section.navItemTop =  item_in / total_steps;
+            app.frames.positions.push(item_in);
+          }
+
+          // add content
+          section.content[c] = section.content[c].replace("<div", ("<div" + skrollr_data));
+          section_html += section.content[c];
+          ongoing += skrollr_step;
+
+        }
+        // increase ongoing by section pad
+        ongoing += (skrollr_step + skrollr_hold) * section.content.length;
+        $section.innerHTML = section_html;
+        app.sectionsContainer.appendChild($section);
+      }
+
+      if (!skip_buffers) {
+        // add last section
+        var $section = document.createElement("section");
+        // unique id for section
+        $section.id = "section-" + (app.sections.length + 1);
+        var skrollr_data = ""+
+          "<div data-" + (intro_length + viewing_length) + "='opacity: 0;' data-" + (intro_length + viewing_length + outro_length) + "='opacity: 0;'></div>";
+        $section.innerHTML = skrollr_data;
+        app.sectionsContainer.appendChild($section);
+        app.frames.positions.push((intro_length + viewing_length + outro_length));
+      }
+    },
 
 
-      // set progress
-      // var delta = Math.max(-1, Math.min(1, e.wheelDelta));
-      var delta = e.deltaY;
-      app.progressHandler(delta);
+    // run skrollr
+    skrollrGo: function(e) {
+      // console.log(e);
+      var progress = e.curTop / e.maxTop;
+      app.progress.direction = (app.progress.percent > progress) ? "up" : "down";
+      app.progress.percent = progress;
+      app.progressHandler();
     },
 
 
@@ -401,8 +465,8 @@ function Site(params) {
     },
 
     frames: {
-      inc: (/firefox/.test(navigator.userAgent.toLowerCase())) ? 1 : 0.25,
       count: params.frames.count,
+      total_steps: params.frames.total_steps,
       lo_path: params.frames.lo_path,
       hi_path: params.frames.hi_path,
       prefix: params.frames.prefix,
@@ -410,6 +474,8 @@ function Site(params) {
       loaded: {
         count: 0, val: false, partial: false
       },
+      currentPosition: 0,
+      positions: new Array(),
       data: new Array()
     },
 
@@ -433,6 +499,7 @@ function Site(params) {
       percent: 0
     },
 
+    sectionsContainer: params.sectionsContainer,
     sections: params.sections
 
   };
