@@ -64,7 +64,7 @@ var section_content = [
   ],
   [
     '<div>If you want to see what I am doing <em>now</em>:</div>',
-    '<div class="sans"><a href="http://codepen.io/jakealbaugh" target="_blank">CodePen</a> / <a href="http://codepen.io/jakealbaugh/blog" target="_blank">Blog</a> / <a href="http://github.com/jakealbaugh" target="_blank">GitHub</a></div>',
+    '<div class="sans"><a href="http://jakealbaugh.com/blog/" target="_blank">Blog</a> / <a href="http://codepen.io/jakealbaugh" target="_blank">CodePen</a> / <a href="http://github.com/jakealbaugh" target="_blank">GitHub</a></div>',
     '<div class="space">Or, if you would like to contact me:</div>',
     '<div class="sans lower"><a href="http://twitter.com/jake_albaugh" target="_blank">@jake_albaugh</a> / <a href="mailto:jake.albaugh@gmail.com" target="_blank">jake.albaugh@gmail.com</a></div>'
   ]

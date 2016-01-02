@@ -1,8 +1,8 @@
 // behavior once page is loaded
-.loaded #prism-menu,
-.static #prism-menu {
-  opacity: 1;
-}
+// .loaded #prism-menu,
+// .static #prism-menu {
+//   opacity: 1;
+// }
 
 #prism-menu {
   z-index: 10;
@@ -10,7 +10,7 @@
   top: 1rem; left: 1rem;
   width: auto;
   height: 30px;
-  opacity: 0;
+  // opacity: 0;
   transition: opacity 200ms linear;
   transform-style: preserve-3d;
 
@@ -21,11 +21,12 @@
     transform: translateY(-50%);
     position: absolute;
     top: 50%;
-    left: -270px;
-    width: 270px;
+    left: -350px;
+    width: 350px;
     display: block;
     pointer-events: none;
     opacity: 0;
+    font-size: 0.7rem;
     color: color(semi-trans-white);
     transition: opacity 350ms linear,
       left 800ms cubic-bezier(0.4,-0.37, 0.58, 1);
@@ -96,8 +97,8 @@
     bottom: 2rem; left: 2rem;
 
     .prism-menu-list {
-      left: -420px;
-      width: 420px;
+      left: -480px;
+      width: 480px;
       top: 50%;
       font-size: 1.1rem;
       a {
