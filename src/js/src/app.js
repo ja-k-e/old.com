@@ -1,7 +1,7 @@
 var settings = {
   frames: {
-    count: 240,
-    total_steps: 26000,
+    count: 226,
+    total_steps: 24484,
     lo_path: "images/bg/lo/",
     hi_path: "images/bg/hi/",
     prefix: "image-",
@@ -71,8 +71,8 @@ var section_content = [
 ];
 
 
-var total_frames = 240;
-    start = 60, stop = 210,
+var total_frames = 226;
+    start = 46, stop = 196,
     pad = 10,
     each = Math.floor((stop - start) / section_content.length);
 
