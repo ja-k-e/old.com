@@ -115,17 +115,37 @@ gulp.task("images", function() {
   );
 });
 
+// favicon
+gulp.task("favicon", function() {
+  return (
+    gulp
+      .src(["src/favicon/*"])
+      .pipe(
+        plugins.imagemin({
+          progressive: true,
+          svgoPlugins: [{ removeViewBox: false }],
+          use: [plugins.imageminPngquant()]
+        })
+      )
+      .pipe(gulp.dest("dist/favicon"))
+
+      // reload connect server
+      .pipe(plugins.connect.reload())
+  );
+});
+
 // watch tasks
 gulp.task("watch", function() {
   gulp.watch(["src/html/*.html"], ["html"]);
   gulp.watch(["src/scss/*.scss", "src/scss/**/*.scss"], ["scss"]);
   gulp.watch(["src/js/*.js", "src/js/src/*.js", "src/js/src/**/*.js"], ["js"]);
   gulp.watch(["src/images/*"], ["images"]);
+  gulp.watch(["src/favicon/*"], ["favicon"]);
 });
 
 // initialize tasks
 gulp.task("initialize", function() {
-  plugins.runSequence("html", "scss", "js", "images");
+  plugins.runSequence("html", "scss", "js", "images", "favicon");
 });
 
 // default task
