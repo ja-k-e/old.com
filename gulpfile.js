@@ -130,6 +130,7 @@ gulp.task("initialize", function() {
 
 // default task
 gulp.task("default", ["initialize", "connect", "watch"]);
+gulp.task("build", ["initialize"]);
 
 // Handle the error
 function errorHandler(error) {
