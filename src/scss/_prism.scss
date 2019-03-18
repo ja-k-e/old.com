@@ -4,89 +4,65 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  // perspective for cube
-  perspective: 3000px;
 }
 
-@mixin prism($dimension, $color, $anim-in:false) {
-  $spacer: 0.25px; // extra spacing on z-axis
 
-  transform-style: preserve-3d;
+@mixin prism($dimension, $color, $anim-in: false) {
+  $spacer: 0.25px; // extra spacing on z-axis
+  $radius: $dimension / 2;
+
   width: $dimension;
   height: $dimension;
-  display: block;
+  // margin: 75px auto 0;
+  perspective: 3000px;
   transform-origin: 50% 50%;
+
 
   // shape container is the canvas
   .shape {
-    position: absolute;
+    position: relative;
     width: $dimension;
     height: $dimension;
     transform-style: preserve-3d;
-    transform-origin: 50% 50%;
-    @if ($anim-in == true) {
-      animation: flicker 100ms linear infinite,
-        jiggle 100ms linear infinite;
-    }
+    transform: translateZ(-$radius) rotateX(0deg);
   }
 
   // axis is the center point for sides (width, depth, height)
-  .axis {
+  .side {
     position: absolute;
-    transform-style: preserve-3d;
-    transform-origin: 50% 50%;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    // pseudos are exploded from the center axis to make sides
-    &::before, &::after {
-      content: attr(title);
-      position: absolute;
-      display: block;
-      border: 1px solid color(semi-trans-white);
-      box-sizing: border-box;
-    }
-  }
-
-  // all axis
-  .width, .depth, .height {
     width: $dimension;
-    &::before, &::after {
-      background: $color;
-      width: $dimension;
-      height: $dimension;
-    }
-    &::before {
-      transform: translateZ($dimension / 2 + $spacer);
-    }
-  }
-
-  // width axis
-  .width {
-    transform: translateX(-50%);
-    // sides
-    &::after {
-      transform: translateZ($dimension / -2 + $spacer) rotateX(180deg) rotateZ(180deg);
-    }
-  }
-
-  // depth axis
-  .depth {
-    transform: translateX(-50%) rotateY(90deg);
-    // sides
-    &::after {
-      transform: translateZ($dimension / -2 + $spacer) rotateY(180deg);
-    }
-  }
-
-  // height axis
-  .height {
-    transform: translate(-50%,-50%) rotateX(90deg);
     height: $dimension;
-    top: 50%;
-    // sides
-    &::after {
-      transform: translateZ($dimension / -2 + $spacer) rotateX(180deg);
+    box-sizing: border-box;
+    text-transform: uppercase;
+    text-align: center;
+    &::before {
+      content: '';
+      position: absolute;
+      border: 0.5px solid color(semi-trans-white);
+      background: $color;
+      box-sizing: border-box;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    &.back {
+      transform: translateZ(-$radius) rotateX(180deg);
+    }
+    &.top {
+      transform: translateY(-$radius) rotateX(90deg);
+    }
+    &.bottom {
+      transform: translateY($radius) rotateX(270deg);
+    }
+    &.front {
+      transform: translateZ($radius);
+    }
+    &.left {
+      transform: translateX(-$radius) rotateY(90deg);
+    }
+    &.right {
+      transform: translateX($radius) rotateY(90deg);
     }
   }
 }

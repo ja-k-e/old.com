@@ -47,10 +47,10 @@
       left 800ms cubic-bezier(0, 1.26, 0.58, 1);
   }
 
-  .prism {
+  .prism .shape {
     animation: prism-out 500ms ease-in-out forwards;
   }
-  &.open .prism {
+  &.open .prism .shape {
     animation: prism-in 500ms ease-in-out forwards;
   }
 

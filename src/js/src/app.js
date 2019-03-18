@@ -9,7 +9,7 @@ var settings = {
   },
   progress: {
     loader: document.getElementById("loader"),
-    loaderPrism: document.querySelector("#loader .prism"),
+    loaderPrism: document.querySelector("#loader .prism .shape"),
     loaderMessage: document.querySelector("#loader .message"),
     indicator: document.getElementById("indicator"),
     indicatorContainer: document.getElementById("indicator-container"),
