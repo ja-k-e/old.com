@@ -1,8 +1,10 @@
 .background-static {
   position: fixed;
-  width: 100%; height: 100%;
-  min-width: 1280px; min-height: 720px;
-  background-image: url(../images/bg/hi/image-1.jpg);
+  width: 100%;
+  height: 100%;
+  min-width: 1280px;
+  min-height: 720px;
+  background-image: url("https://s3-us-west-2.amazonaws.com/jakealbaugh.com/images/bg/hi/image-1.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -11,14 +13,19 @@
 
 .app-wrapper {
   position: fixed;
-  top: 0; left: 0;
-  height: 100%; width: 100%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
   min-height: 100%;
 
   .loaded &:before {
     content: "";
     position: fixed;
-    top: 0; right: 0; bottom: 0; left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     z-index: 3;
     transition: opacity 500ms ease-out;
     background-color: color(semi-trans-black);
@@ -29,7 +36,7 @@
 .static {
   .background-static {
     opacity: 0.5;
-    background-image: url(../images/bg/hi/image-106.jpg);
+    background-image: url("https://s3-us-west-2.amazonaws.com/jakealbaugh.com/images/bg/hi/image-106.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -37,19 +44,25 @@
 }
 
 @media (min-width: $s-md) {
-  .static .app-wrapper:after { opacity: 1; }
+  .static .app-wrapper:after {
+    opacity: 1;
+  }
 }
 
 @keyframes bg-flicker {
-  from { opacity: 0; }
-  to   { opacity: 0.1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.1;
+  }
 }
 
-
-.scroll #background { display: none; }
+.scroll #background {
+  display: none;
+}
 
 #background {
-
   // needs fixing. color difference in images
   filter: grayscale(100%);
 
@@ -61,8 +74,11 @@
   // equiv cover & center
   display: block;
   position: absolute;
-  width: auto; height: auto;
-  min-width: 100%; min-height: 100%;
-  top: 50%; left: 50%;
+  width: auto;
+  height: auto;
+  min-width: 100%;
+  min-height: 100%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
 }

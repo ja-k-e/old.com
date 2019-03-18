@@ -2,8 +2,8 @@ var settings = {
   frames: {
     count: 226,
     total_steps: 24484,
-    lo_path: "images/bg/lo/",
-    hi_path: "images/bg/hi/",
+    lo_path: "https://s3-us-west-2.amazonaws.com/jakealbaugh.com/images/bg/lo/",
+    hi_path: "https://s3-us-west-2.amazonaws.com/jakealbaugh.com/images/bg/hi/",
     prefix: "image-",
     ext: ".jpg"
   },
@@ -63,26 +63,25 @@ var section_content = [
     "<div>and am <em>confident</em> when I’m right.</div>"
   ],
   [
-    '<div>If you want to see what I am doing <em>now</em>:</div>',
-    '<div class="sans"><a href="http://jakealbaugh.com/blog/" target="_blank">Blog</a> / <a href="http://codepen.io/jakealbaugh" target="_blank">CodePen</a> / <a href="http://github.com/jakealbaugh" target="_blank">GitHub</a></div>',
+    "<div>If you want to see what I am doing <em>now</em>:</div>",
+    '<div class="sans"><a href="https://jakealbaugh.com/blog/" target="_blank">Blog</a> / <a href="https://codepen.io/jakealbaugh" target="_blank">CodePen</a> / <a href="https://github.com/jakealbaugh" target="_blank">GitHub</a></div>',
     '<div class="space">Or, if you would like to contact me:</div>',
-    '<div class="sans lower"><a href="http://twitter.com/jake_albaugh" target="_blank">@jake_albaugh</a> / <a href="mailto:jake.albaugh@gmail.com" target="_blank">jake.albaugh@gmail.com</a></div>'
+    '<div class="sans lower"><a href="https://twitter.com/jake_albaugh" target="_blank">@jake_albaugh</a> / <a href="mailto:jake.albaugh@gmail.com" target="_blank">jake.albaugh@gmail.com</a></div>'
   ]
 ];
 
-
 var total_frames = 226;
-    start = 46, stop = 196,
-    pad = 10,
-    each = Math.floor((stop - start) / section_content.length);
-
+var start = 46;
+var stop = 196;
+var pad = 10;
+var each = Math.floor((stop - start) / section_content.length);
 
 for (var i = 0; i < section_content.length; i++) {
   var in_frame = start + each * i,
-      out_frame = in_frame + each;
+    out_frame = in_frame + each;
   settings.sections.push({
-    in_perc: (in_frame / total_frames),
-    out_perc: (out_frame / total_frames),
+    in_perc: in_frame / total_frames,
+    out_perc: out_frame / total_frames,
     in_frame: in_frame,
     out_frame: out_frame,
     content: section_content[i]

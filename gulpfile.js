@@ -100,7 +100,7 @@ gulp.task("js", function() {
 gulp.task("images", function() {
   return (
     gulp
-      .src(["src/images/*", "src/images/**/*"])
+      .src(["src/images/*"])
       .pipe(
         plugins.imagemin({
           progressive: true,
@@ -120,7 +120,7 @@ gulp.task("watch", function() {
   gulp.watch(["src/html/*.html"], ["html"]);
   gulp.watch(["src/scss/*.scss", "src/scss/**/*.scss"], ["scss"]);
   gulp.watch(["src/js/*.js", "src/js/src/*.js", "src/js/src/**/*.js"], ["js"]);
-  gulp.watch(["src/images/*", "src/images/**/*"], ["images"]);
+  gulp.watch(["src/images/*"], ["images"]);
 });
 
 // initialize tasks

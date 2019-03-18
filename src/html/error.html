@@ -1,15 +1,15 @@
 <html>
   <head>
     <title>Error | jakealbaugh.com</title>
-    <link href='http://fonts.googleapis.com/css?family=Raleway:300'>
+    <link href="http://fonts.googleapis.com/css?family=Raleway:300" />
     <style>
       body {
         font-family: Raleway;
         background: black;
         color: white;
         height: 100vh;
-        position:relative;
-        background-image: url(../images/bg/hi/image-106.jpg);
+        position: relative;
+        background-image: url("https://s3-us-west-2.amazonaws.com/jakealbaugh.com/images/bg/hi/image-106.jpg");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -18,100 +18,131 @@
         font-weight: 300;
         margin: 0;
         text-transform: uppercase;
-        color: #FFBB00;
+        color: #ffbb00;
         opacity: 0.9;
       }
-      .prism-container, h1 {
+      .prism-container,
+      h1 {
         position: absolute;
-        top: 50%; left: 50%;
+        top: 50%;
+        left: 50%;
         -webkit-transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-                transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
       }
       .prism-container > .prism {
         opacity: 0.5;
         -webkit-transform-style: preserve-3d;
-                transform-style: preserve-3d;
+        transform-style: preserve-3d;
         width: 100px;
         height: 100px;
         display: block;
         -webkit-animation: prism-spin 5s linear infinite;
-            -ms-animation: prism-spin 5s linear infinite;
-                animation: prism-spin 5s linear infinite;
+        -ms-animation: prism-spin 5s linear infinite;
+        animation: prism-spin 5s linear infinite;
         -webkit-transform-origin: 50% 50%;
-            -ms-transform-origin: 50% 50%;
-                transform-origin: 50% 50%; }
+        -ms-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+      }
 
-        @-webkit-keyframes prism-spin {
-          from {
-            -webkit-transform: rotateX(0deg) rotateY(0deg);
-                    transform: rotateX(0deg) rotateY(0deg); }
-          to {
-            -webkit-transform: rotateX(-180deg) rotateY(-180deg);
-                    transform: rotateX(-180deg) rotateY(-180deg); } }
+      @-webkit-keyframes prism-spin {
+        from {
+          -webkit-transform: rotateX(0deg) rotateY(0deg);
+          transform: rotateX(0deg) rotateY(0deg);
+        }
+        to {
+          -webkit-transform: rotateX(-180deg) rotateY(-180deg);
+          transform: rotateX(-180deg) rotateY(-180deg);
+        }
+      }
 
-        @keyframes prism-spin {
-          from {
-            -webkit-transform: rotateX(0deg) rotateY(0deg);
-                    transform: rotateX(0deg) rotateY(0deg); }
-          to {
-            -webkit-transform: rotateX(-180deg) rotateY(-180deg);
-                    transform: rotateX(-180deg) rotateY(-180deg); } }
-        .prism-container.prism-container > .prism .shape {
-          position: absolute;
-          width: 100px;
-          height: 100px;
-          -webkit-transform-style: preserve-3d;
-                  transform-style: preserve-3d;
-          -webkit-transform-origin: 50% 50%;
-              -ms-transform-origin: 50% 50%;
-                  transform-origin: 50% 50%; }
-        .prism-container.prism-container > .prism .axis {
-          position: absolute;
-          -webkit-transform-style: preserve-3d;
-                  transform-style: preserve-3d;
-          -webkit-transform-origin: 50% 50%;
-              -ms-transform-origin: 50% 50%;
-                  transform-origin: 50% 50%;
-          top: 0;
-          bottom: 0;
-          left: 50%; }
-          .prism-container.prism-container > .prism .axis::before, .prism-container.prism-container > .prism .axis::after {
-            content: attr(title);
-            position: absolute;
-            display: block;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-sizing: border-box; }
-        .prism-container.prism-container > .prism .width, .prism-container.prism-container > .prism .depth, .prism-container.prism-container > .prism .height {
-          width: 100px; }
-          .prism-container.prism-container > .prism .width::before, .prism-container.prism-container > .prism .width::after, .prism-container.prism-container > .prism .depth::before, .prism-container.prism-container > .prism .depth::after, .prism-container.prism-container > .prism .height::before, .prism-container.prism-container > .prism .height::after {
-            background: rgba(255, 255, 255, 0.2);
-            width: 100px;
-            height: 100px; }
-          .prism-container.prism-container > .prism .width::before, .prism-container.prism-container > .prism .depth::before, .prism-container.prism-container > .prism .height::before {
-            -webkit-transform: translateZ(50.5px);
-                    transform: translateZ(50.5px); }
-        .prism-container.prism-container > .prism .width {
-          -webkit-transform: translateX(-50%);
-              -ms-transform: translateX(-50%);
-                  transform: translateX(-50%); }
-          .prism-container.prism-container > .prism .width::after {
-            -webkit-transform: translateZ(-49.5px) rotateX(180deg) rotateZ(180deg);
-                    transform: translateZ(-49.5px) rotateX(180deg) rotateZ(180deg); }
-        .prism-container.prism-container > .prism .depth {
-          -webkit-transform: translateX(-50%) rotateY(90deg);
-                  transform: translateX(-50%) rotateY(90deg); }
-          .prism-container.prism-container > .prism .depth::after {
-            -webkit-transform: translateZ(-49.5px) rotateY(180deg);
-                    transform: translateZ(-49.5px) rotateY(180deg); }
-        .prism-container.prism-container > .prism .height {
-          -webkit-transform: translate(-50%, -50%) rotateX(90deg);
-                  transform: translate(-50%, -50%) rotateX(90deg);
-          height: 100px;
-          top: 50%; }
-          .prism-container.prism-container > .prism .height::after {
-            -webkit-transform: translateZ(-49.5px) rotateX(180deg);
-                    transform: translateZ(-49.5px) rotateX(180deg); }
+      @keyframes prism-spin {
+        from {
+          -webkit-transform: rotateX(0deg) rotateY(0deg);
+          transform: rotateX(0deg) rotateY(0deg);
+        }
+        to {
+          -webkit-transform: rotateX(-180deg) rotateY(-180deg);
+          transform: rotateX(-180deg) rotateY(-180deg);
+        }
+      }
+      .prism-container.prism-container > .prism .shape {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+      }
+      .prism-container.prism-container > .prism .axis {
+        position: absolute;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+      }
+      .prism-container.prism-container > .prism .axis::before,
+      .prism-container.prism-container > .prism .axis::after {
+        content: attr(title);
+        position: absolute;
+        display: block;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-sizing: border-box;
+      }
+      .prism-container.prism-container > .prism .width,
+      .prism-container.prism-container > .prism .depth,
+      .prism-container.prism-container > .prism .height {
+        width: 100px;
+      }
+      .prism-container.prism-container > .prism .width::before,
+      .prism-container.prism-container > .prism .width::after,
+      .prism-container.prism-container > .prism .depth::before,
+      .prism-container.prism-container > .prism .depth::after,
+      .prism-container.prism-container > .prism .height::before,
+      .prism-container.prism-container > .prism .height::after {
+        background: rgba(255, 255, 255, 0.2);
+        width: 100px;
+        height: 100px;
+      }
+      .prism-container.prism-container > .prism .width::before,
+      .prism-container.prism-container > .prism .depth::before,
+      .prism-container.prism-container > .prism .height::before {
+        -webkit-transform: translateZ(50.5px);
+        transform: translateZ(50.5px);
+      }
+      .prism-container.prism-container > .prism .width {
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+      }
+      .prism-container.prism-container > .prism .width::after {
+        -webkit-transform: translateZ(-49.5px) rotateX(180deg) rotateZ(180deg);
+        transform: translateZ(-49.5px) rotateX(180deg) rotateZ(180deg);
+      }
+      .prism-container.prism-container > .prism .depth {
+        -webkit-transform: translateX(-50%) rotateY(90deg);
+        transform: translateX(-50%) rotateY(90deg);
+      }
+      .prism-container.prism-container > .prism .depth::after {
+        -webkit-transform: translateZ(-49.5px) rotateY(180deg);
+        transform: translateZ(-49.5px) rotateY(180deg);
+      }
+      .prism-container.prism-container > .prism .height {
+        -webkit-transform: translate(-50%, -50%) rotateX(90deg);
+        transform: translate(-50%, -50%) rotateX(90deg);
+        height: 100px;
+        top: 50%;
+      }
+      .prism-container.prism-container > .prism .height::after {
+        -webkit-transform: translateZ(-49.5px) rotateX(180deg);
+        transform: translateZ(-49.5px) rotateX(180deg);
+      }
     </style>
   </head>
   <body>
